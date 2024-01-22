@@ -21,11 +21,11 @@ public class HomeController {
 	PCMemberrepo repo;
 	@GetMapping(value="/")
 	public String getLandingPage() {
-		return "landing.jsp";
+		return "landingpage.jsp";
 	}
 	@GetMapping(value="/Login")
 	public String getLogin() {
-		return "index.jsp";
+		return "login.jsp";
 	}
     @PostMapping(value="/Dashboard")
     public String getdashboard(@RequestParam String email,@RequestParam String password,Model model) {
