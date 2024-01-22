@@ -8,6 +8,7 @@ public class SElab23Team9Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SElab23Team9Application.class, args);
+		System.out.println("sdhbasdu  sdfjdfn");
 	}
 
 }
