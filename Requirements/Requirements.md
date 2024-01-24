@@ -33,7 +33,7 @@ Prepared by group 2,4,9 of evening batch
   * 3.1 [Login and Validation](#31-login-and-validation)
   * 3.2 [Profile](#32-profile)
   * 3.3 [View Reviewed Papers](#33-view-reviewed-papers)
-  * 3.4 [View All Papers](#34-view-all-papers)
+  * 3.4 [View To be Reviewed Papers](#34-view-to-be-reviewed-papers)
 * [Other Nonfunctional Requirements](#4-other-nonfunctional-requirements)
   * 4.1 [Performance Requirements](#41-performance-requirements)
   * 4.2 [Safety Requirements](#42-safety-requirements)
@@ -546,7 +546,7 @@ This feature allows users to view reviewed papers and take actions on them. It i
 4. **Assign Reviewer:** Allow the user to assign a reviewer to a paper.
 
 
-## 3.4 System Feature: View-all-papers
+## 3.4 System Feature: View-to-be-reviewed-papers
 
 
 ### 3.4.1 Description and Priority
