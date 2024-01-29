@@ -15,18 +15,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
+	
+	@GetMapping(value="/")
+	public String getLandingpage() {
+		return "landingpage.jsp";
+	}
 	@GetMapping(value="/Login")
 	public String getLogin() {
 		return "login.jsp";
 	}
-    @PostMapping(value="/Dashboard")
-    public String getdashboard(@RequestParam String email,@RequestParam String password,Model model) {
-    	if (repo.existsByEmailAndPassword(email,password)) {
-    		f=repo.findByEmail(email);
-    		model.addAttribute("name",f.getName());
-    	System.out.println("arree ");
-    		return "dashboard.jsp";}
-    	else {
-    		return "Loginerror.jsp";}
-    }
+//    @PostMapping(value="/Dashboard")
+//    public String getdashboard(@RequestParam String email,@RequestParam String password,Model model) {
+//    	if (repo.existsByEmailAndPassword(email,password)) {
+//    		f=repo.findByEmail(email);
+//    		model.addAttribute("name",f.getName());
+//    	System.out.println("arree ");
+//    		return "dashboard.jsp";}
+//    	else {
+//    		return "Loginerror.jsp";}
+//    }
 }
