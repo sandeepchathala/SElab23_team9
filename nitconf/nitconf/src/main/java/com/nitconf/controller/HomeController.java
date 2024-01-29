@@ -95,4 +95,9 @@ public class HomeController {
     	    return "redirect:/Profile";
     	}
     }
+    @GetMapping(value="/ReviewedPapers")
+    public String ReviewedPaper() {
+    	//System.out.println("why are you here....");
+    	return "reviewedpapers.jsp";
+    }
 }
