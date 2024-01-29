@@ -10,7 +10,7 @@ public class PCMember {
     @GeneratedValue
     private int id;
     private String name;
-    private int phonenumber;
+    private long phonenumber;
     private String email;
     private String password;
 	public int getId() {
@@ -25,10 +25,10 @@ public class PCMember {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getPhonenumber() {
+	public long getPhonenumber() {
 		return phonenumber;
 	}
-	public void setPhonenumber(int phonenumber) {
+	public void setPhonenumber(long phonenumber) {
 		this.phonenumber = phonenumber;
 	}
 	public String getEmail() {
