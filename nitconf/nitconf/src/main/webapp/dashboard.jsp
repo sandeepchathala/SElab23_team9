@@ -54,8 +54,8 @@
              <li><a href="/Profile">Profile</a></li>
         </form>
        
-        <li><a href="/reviewed-papers">Reviewed Papers</a></li>
-        <li><a href="/unreviewed-papers">Unreviewed Papers</a></li>
+        <li><a href="/ReviewedPapers">Reviewed Papers</a></li>
+        <li><a href="/UnreviewedPapers">Unreviewed Papers</a></li>
     </ul>
 </nav>
 
