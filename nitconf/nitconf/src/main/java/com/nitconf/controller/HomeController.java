@@ -100,4 +100,41 @@ public class HomeController {
     	//System.out.println("why are you here....");
     	return "reviewedpapers.jsp";
     }
+    @GetMapping("/unreviewedpapers")
+	public String getallpapers(Model model) {
+		List<Files> all = filerepository.findAll();	
+		
+		for (Files paper : all) {
+//	        System.out.println("Paper ID: " + paper.getId());
+//	        System.out.println("Paper Title: " + paper.getTitle());
+		model.addAttribute("id",paper.getId());
+		model.addAttribute("title",paper.getTitle());
+		model.addAttribute("tags",paper.getTags());
+		model.addAttribute("status",paper.getStatus());
+		model.addAttribute("link",paper.getLink());
+//	        // Print other fields as needed
+	    }
+		//long r=1;
+		//Collection<Paper> paper=PSrepo.findAll();
+		//model.add
+		
+				//if (t.isPresent()) {
+				    //Paper paper = t.get();
+				    // Now you can safely call methods on the Paper object
+		//model.addAllAttributes(paper);
+		
+//				    model.addAttribute("id",paper.getId());
+//					model.addAttribute("title",paper.getTitle());
+//					model.addAttribute("tags",paper.getTags());
+//					model.addAttribute("status",paper.getStatus());
+//					model.addAttribute("link",paper.getLink());
+				    // ... other methods
+				//} else {
+				    // Handle the case when the Optional is empty
+				//}
+
+		
+		
+		return "unreviewedpapers.jsp";
+	}
 }
