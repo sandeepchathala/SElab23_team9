@@ -127,7 +127,7 @@
 <body>
 
 <!-- Add animated water droplets to the background -->
-<div class="droplet" style="top: 30px; left: 10px;"></div>
+<div class="droplet" style="top: 30px; left: 20px;"></div>
 <div class="droplet" style="top: 80px; left: 50px;"></div>
 <div class="droplet" style="top: 120px; left: 150px;"></div>
 <!-- Add more droplets as needed -->
