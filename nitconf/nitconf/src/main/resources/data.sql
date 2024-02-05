@@ -1,0 +1,5 @@
+-- INSERT INTO PCMember (name,email,password)VALUES ('sandeep','sandeepchathala007@gmail.com','1234');
+-- INSERT INTO Author (name,email)VALUES ('author1','author1@gmail.com');
+-- INSERT INTO Author (name,email)VALUES ('author2','author2@gmail.com');
+-- INSERT INTO Reviewer (name,email,tags)VALUES ('reviewer1','reviewer1@gmail.com','physics');
+-- INSERT INTO Reviewer (name,email,tags)VALUES ('reviewer2','reviewer2@gmail.com','maths');
