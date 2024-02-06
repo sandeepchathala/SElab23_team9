@@ -8,17 +8,17 @@ import jakarta.persistence.Id;
 public class PCMember {
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
     private String name;
     private long phonenumber;
     private String email;
     private String password;
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-//	public void setId(int id) {
-//		this.id = id;
-//	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}
