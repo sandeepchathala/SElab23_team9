@@ -95,5 +95,27 @@ public class ReviewerController {
 	     }
 	 }
 	 
+	 @GetMapping("/showreview")
+	  public ModelAndView showreview(@RequestParam Long paper_id,HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
+		  ModelAndView m= new ModelAndView("showreview.jsp");
+		  response.setContentType("text/html;charset=UTF-8");
+		  try {
+			  request.setAttribute("paper_id",paper_id);
+		      Optional<Paper> p=PS_repo.findById(paper_id);
+		      if(p.isPresent()) {
+		    	  Paper pp=p.get();
+		    	  String paper_title=pp.getTitle();
+		    	  request.setAttribute("paper_title",paper_title);
+	
+		    	}
+		      RequestDispatcher dispatcher = request.getRequestDispatcher("showreview.jsp");
+		      dispatcher.forward(request,response);
+		  }
+		  catch (Exception e) {
+	      e.printStackTrace();
+	     }
+	       return m;
+	  }
+	 
 }
 
