@@ -2,15 +2,15 @@ package com.nitconf.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
 public class PCMember {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private long phonenumber;
     private String email;
     private String password;
 	public Long getId() {
@@ -24,12 +24,6 @@ public class PCMember {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public long getPhonenumber() {
-		return phonenumber;
-	}
-	public void setPhonenumber(long phonenumber) {
-		this.phonenumber = phonenumber;
 	}
 	public String getEmail() {
 		return email;
