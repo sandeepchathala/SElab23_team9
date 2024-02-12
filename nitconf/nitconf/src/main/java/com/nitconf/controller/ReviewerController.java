@@ -95,27 +95,52 @@ public class ReviewerController {
 	     }
 	 }
 	 
-	 @GetMapping("/showreview")
-	  public ModelAndView showreview(@RequestParam Long paper_id,HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
-		  ModelAndView m= new ModelAndView("showreview.jsp");
-		  response.setContentType("text/html;charset=UTF-8");
-		  try {
-			  request.setAttribute("paper_id",paper_id);
-		      Optional<Paper> p=PS_repo.findById(paper_id);
-		      if(p.isPresent()) {
-		    	  Paper pp=p.get();
-		    	  String paper_title=pp.getTitle();
-		    	  request.setAttribute("paper_title",paper_title);
-	
-		    	}
-		      RequestDispatcher dispatcher = request.getRequestDispatcher("showreview.jsp");
-		      dispatcher.forward(request,response);
-		  }
-		  catch (Exception e) {
-	      e.printStackTrace();
-	     }
-	       return m;
-	  }
+	 /**
+	     * Private method to display the reviews of a selected paper.
+	     *
+	     * @param paper_id Paper ID for which the review details are displayed.
+	     * @param request  HttpServletRequest object
+	     * @param response HttpServletResponse object
+	     * @return ModelAndView object for displaying the review details page.
+	     * @throws ServletException If a servlet-specific error occurs.
+	     * @throws IOException      If an I/O error occurs.
+	     */
+	    private ModelAndView fun_showreview(Long paper_id, HttpServletRequest request, HttpServletResponse response)
+	            throws ServletException, IOException {
+	        response.setContentType("text/html;charset=UTF-8");
+	        try {
+	            request.setAttribute("paper_id", paper_id);
+	            Optional<Paper> p = PS_repo.findById(paper_id);
+	            if (p.isPresent()) {
+	                Paper pp = p.get();
+	                String paper_title = pp.getTitle();
+	                request.setAttribute("paper_title", paper_title);
+	            }
+	            RequestDispatcher dispatcher = request.getRequestDispatcher("showreview.jsp");
+	            dispatcher.forward(request, response);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return new ModelAndView("showreview.jsp");
+	    }
+
+	    /**
+	     * Endpoint for showing the reviews for a selected paper.
+	     * It takes paper_id as input and other inputs as HttpServletRequest request and HttpServletResponse response
+	     * and displays all the reviews of selected paper
+	     *
+	     * @param paper_id Paper ID for which the review details are displayed.
+	     * @param request  HttpServletRequest object
+	     * @param response HttpServletResponse object
+	     * @return ModelAndView object for displaying the review details page.
+	     * @throws ServletException If a servlet-specific error occurs.
+	     * @throws IOException      If an I/O error occurs.
+	     */
+	    @GetMapping("/showreview")
+	    public ModelAndView showreview(@RequestParam Long paper_id, HttpServletRequest request, HttpServletResponse response)
+	            throws ServletException, IOException {
+	        return fun_showreview(paper_id, request, response);
+	    }
 	 
 }
 
