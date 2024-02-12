@@ -1,3 +1,6 @@
+/**
+ * Controller class for handling operations related to papers in the API.
+ */
 package com.nitconf.controller;
 
 import org.springframework.ui.Model;
@@ -6,41 +9,73 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * RestController for handling paper-related operations.
+ */
 @RestController
 @RequestMapping("/api/papers")
 public class PapersController {
-     
-	
-	@GetMapping("/assignedpapers")
+
+    /**
+     * Endpoint for accessing the assigned papers page.
+     *
+     * @param model Model object to hold attributes for the assigned papers page.
+     * @return ModelAndView object for the assigned papers page.
+     */
+    @GetMapping("/assignedpapers")
     public ModelAndView getassignedpapers(Model model) {
-		ModelAndView m = new ModelAndView("assignedpapers.jsp");
-        return m;
+        return new ModelAndView("assignedpapers.jsp");
     }
-	@GetMapping("/reviewedpapers")
+
+    /**
+     * Endpoint for accessing the reviewed papers page.
+     *
+     * @param model Model object to hold attributes for the reviewed papers page.
+     * @return ModelAndView object for the reviewed papers page.
+     */
+    @GetMapping("/reviewedpapers")
     public ModelAndView getreviewedpapersa(Model model) {
-		ModelAndView m = new ModelAndView("reviewedpapers.jsp");
-        return m;
+        return new ModelAndView("reviewedpapers.jsp");
     }
-	@GetMapping("/unreviewedpapers")
+
+    /**
+     * Endpoint for accessing the unreviewed papers page.
+     *
+     * @param model Model object to hold attributes for the unreviewed papers page.
+     * @return ModelAndView object for the unreviewed papers page.
+     */
+    @GetMapping("/unreviewedpapers")
     public ModelAndView getunreviewedpapersa(Model model) {
-		ModelAndView m = new ModelAndView("unreviewedpapers.jsp");
-        return m;
+        return new ModelAndView("unreviewedpapers.jsp");
     }
-	
-	@GetMapping("/unassignedpapers")
+
+    /**
+     * Endpoint for accessing the unassigned papers page.
+     *
+     * @return ModelAndView object for the unassigned papers page.
+     */
+    @GetMapping("/unassignedpapers")
     public ModelAndView getreviewedData() {
-		ModelAndView model = new ModelAndView("unassignedpapers.jsp");
-        return model;
+        return new ModelAndView("unassignedpapers.jsp");
     }
-	@GetMapping("/acceptedpapers")
+
+    /**
+     * Endpoint for accessing the accepted papers page.
+     *
+     * @return ModelAndView object for the accepted papers page.
+     */
+    @GetMapping("/acceptedpapers")
     public ModelAndView getacceptedData() {
-		ModelAndView model = new ModelAndView("acceptedpapers.jsp");
-        return model;
+        return new ModelAndView("acceptedpapers.jsp");
     }
-	@GetMapping("/rejectedpapers")
+
+    /**
+     * Endpoint for accessing the rejected papers page.
+     *
+     * @return ModelAndView object for the rejected papers page.
+     */
+    @GetMapping("/rejectedpapers")
     public ModelAndView getrejectedData() {
-		ModelAndView model = new ModelAndView("rejectedpapers.jsp");
-        return model;
+        return new ModelAndView("rejectedpapers.jsp");
     }
-	
 }
