@@ -1,3 +1,6 @@
+/**
+ * Controller class for handling actions related to papers in the API.
+ */
 package com.nitconf.controller;
 
 import java.io.IOException;
@@ -23,74 +26,116 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * RestController for handling actions related to papers.
+ */
 @RestController
 @RequestMapping("/api/actions")
 public class ActionsController {
-	
-	@Autowired
-	private PaperStorerepo PSrepo;
-	@Autowired
-	private Authorrepo Arepo;
-	@Autowired
-	private EmailSenderService senderservice;
-	
-	@Transactional
-	@GetMapping("/accept")
-	public ModelAndView accept(@RequestParam Long paper_id,HttpServletRequest request, 
-            HttpServletResponse response) throws ServletException, IOException 
-            { 
-           	System.out.println("accept");
-           	Optional<Paper> p= PSrepo.findById(paper_id);
-           	if(p.isPresent()){
-           		
-           		Paper pp = p.get();
-           		Optional<Author> a = Arepo.findById(pp.getAuthorid());
-           		if(a.isPresent()) {
-           			ModelAndView m = new ModelAndView("redirect:/api/papers/assignedpapers");
-           			Author aa = a.get();
-           			System.out.println(aa.getEmail());
-           			String emailsubject = "Paper is Accepted";
-           			String emailbody = "Dear "+aa.getName()+", Your Paper ( Title = "+pp.getTitle()+" ) which was submitted in NITCONF website on "+pp.getUploadeddate()+" is accepted. Please go through the reviews for more details";
-           			senderservice.sendEmail(aa.getEmail(),emailsubject,emailbody);
-           			System.out.println("accept");
-           			PSrepo.setstatus(pp.getId(),3);
-           			return m;
-           		}
-           		ModelAndView m = new ModelAndView("Author is not Found");
-           		return m;
-           		
-           	}
-           	ModelAndView m = new ModelAndView("Paper is not Found");
-           	return m; 	
+
+    @Autowired
+    private PaperStorerepo PSrepo;
+    @Autowired
+    private Authorrepo Arepo;
+    @Autowired
+    private EmailSenderService senderservice;
+
+    /**
+     * Private method to handle the acceptance of a paper.
+     *
+     * @param paper_id Paper ID for which the acceptance action is performed.
+     * @param request  HttpServletRequest object
+     * @param response HttpServletResponse object
+     * @return ModelAndView object for redirecting to the assigned papers page or displaying an error message.
+     * @throws ServletException If a servlet-specific error occurs.
+     * @throws IOException      If an I/O error occurs.
+     */
+    private ModelAndView fun_accept(Long paper_id, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Optional<Paper> p = PSrepo.findById(paper_id);
+        if (p.isPresent()) {
+            Paper pp = p.get();
+            Optional<Author> a = Arepo.findById(pp.getAuthorid());
+            if (a.isPresent()) {
+                Author aa = a.get();
+                String emailsubject = "Paper is Accepted";
+                String emailbody = "Dear " + aa.getName() + ", Your Paper ( Title = " + pp.getTitle() +
+                        " ) which was submitted in NITCONF website on " + pp.getUploadeddate() +
+                        " is accepted. Please go through the reviews for more details";
+                senderservice.sendEmail(aa.getEmail(), emailsubject, emailbody);
+                PSrepo.setstatus(pp.getId(), 3);
+                return new ModelAndView("redirect:/api/papers/assignedpapers");
+            }
+            return new ModelAndView("Author is not Found");
+        }
+        return new ModelAndView("Paper is not Found");
     }
-	
-	@Transactional
-	@GetMapping("/reject")
-	public ModelAndView reject(@RequestParam Long paper_id,HttpServletRequest request, 
-            HttpServletResponse response) throws ServletException, IOException 
-            { 
-           	 
-           	Optional<Paper> p= PSrepo.findById(paper_id);
-           	if(p.isPresent()){
-           		
-           		Paper pp = p.get();
-           		Optional<Author> a = Arepo.findById(pp.getAuthorid());
-           		if(a.isPresent()) {
-           			ModelAndView m = new ModelAndView("redirect:/api/papers/assignedpapers");
-           			Author aa = a.get();
-           			String emailsubject = "Paper is Rejected";
-           			String emailbody = "Dear "+aa.getName()+", Your Paper ( Title = "+pp.getTitle()+" ) which was submitted in NITCONF website on "+pp.getUploadeddate()+" is rejected. Please go through the reviews for more details";
-           			senderservice.sendEmail(aa.getEmail(),emailsubject,emailbody);
-           			PSrepo.setstatus(pp.getId(),4);
-           			return m;
-           		}
-           		ModelAndView m = new ModelAndView("Author is not Found");
-           		return m;
-           		
-           	}
-           	ModelAndView m = new ModelAndView("Paper is not Found");
-           	return m;
-           	
+
+    /**
+     * Endpoint for accepting a paper.
+     *
+     * @param paper_id Paper ID for which the acceptance action is performed.
+     * @param request  HttpServletRequest object
+     * @param response HttpServletResponse object
+     * @return ModelAndView object for redirecting to the assigned papers page or displaying an error message.
+     * @throws ServletException If a servlet-specific error occurs.
+     * @throws IOException      If an I/O error occurs.
+     */
+    @Transactional
+    @GetMapping("/accept")
+    public ModelAndView accept(@RequestParam Long paper_id, HttpServletRequest request,
+                               HttpServletResponse response) throws ServletException, IOException {
+        return fun_accept(paper_id, request, response);
     }
-	
+
+    /**
+     * Private method to handle the rejection of a paper.
+     *
+     * @param paper_id Paper ID for which the rejection action is performed.
+     * @param request  HttpServletRequest object
+     * @param response HttpServletResponse object
+     * @return ModelAndView object for redirecting to the assigned papers page or displaying an error message.
+     * @throws ServletException If a servlet-specific error occurs.
+     * @throws IOException      If an I/O error occurs.
+     */
+    private ModelAndView fun_reject(Long paper_id, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Optional<Paper> p = PSrepo.findById(paper_id);
+        if (p.isPresent()) {
+
+            Paper pp = p.get();
+            Optional<Author> a = Arepo.findById(pp.getAuthorid());
+            if (a.isPresent()) {
+                Author aa = a.get();
+                String emailsubject = "Paper is Rejected";
+                String emailbody = "Dear " + aa.getName() + ", Your Paper ( Title = " + pp.getTitle() +
+                        " ) which was submitted in NITCONF website on " + pp.getUploadeddate() +
+                        " is rejected. Please go through the reviews for more details";
+                senderservice.sendEmail(aa.getEmail(), emailsubject, emailbody);
+                PSrepo.setstatus(pp.getId(), 4);
+                return new ModelAndView("redirect:/api/papers/assignedpapers");
+            }
+            return new ModelAndView("Author is not Found");
+
+        }
+        return new ModelAndView("Paper is not Found");
+    }
+
+    /**
+     * Endpoint for rejecting a paper.
+     *
+     * @param paper_id Paper ID for which the rejection action is performed.
+     * @param request  HttpServletRequest object
+     * @param response HttpServletResponse object
+     * @return ModelAndView object for redirecting to the assigned papers page or displaying an error message.
+     * @throws ServletException If a servlet-specific error occurs.
+     * @throws IOException      If an I/O error occurs.
+     */
+    @Transactional
+    @GetMapping("/reject")
+    public ModelAndView reject(@RequestParam Long paper_id, HttpServletRequest request,
+                               HttpServletResponse response) throws ServletException, IOException {
+        return fun_reject(paper_id, request, response);
+    }
+
 }
