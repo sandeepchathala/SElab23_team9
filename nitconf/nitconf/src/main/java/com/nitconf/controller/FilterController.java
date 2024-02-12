@@ -32,24 +32,9 @@ public class FilterController {
     @Autowired
     PaperStorerepo PSrepo;
     
-    /** The tag to filter papers by. */
-    public String tag;
-    
-    /**
-     * Processes the request for filtering papers by reviewer tags.
-     * 
-     * @param model the model
-     * @param request the HTTP servlet request
-     * @param response the HTTP servlet response
-     * @param paperid the ID of the paper to filter by
-     * @return the ModelAndView object
-     * @throws ServletException if a servlet error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @GetMapping("/reviewertags")
-    public ModelAndView processRequest(Model model, HttpServletRequest request, HttpServletResponse response,
-            @RequestParam long paperid) throws ServletException, IOException {
-        ModelAndView m = new ModelAndView("reviewertags.jsp");
+    private ModelAndView fun_processRequest(HttpServletRequest request, HttpServletResponse response,
+            long paperid) throws ServletException, IOException {
+    	ModelAndView m = new ModelAndView("reviewertags.jsp");
         response.setContentType("text/html;charset=UTF-8");
         try {
             Paper p = PSrepo.findById(paperid);
@@ -64,7 +49,39 @@ public class FilterController {
         }
         return m;
     }
+    /** The tag to filter papers by. */
+    /**
+     * Processes the request for filtering papers by reviewer tags.
+     * 
+     * @param model the model
+     * @param request the HTTP servlet request
+     * @param response the HTTP servlet response
+     * @param paperid the ID of the paper to filter by
+     * @return the ModelAndView object
+     * @throws ServletException if a servlet error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @GetMapping("/reviewertags")
+    public ModelAndView processRequest(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam long paperid) throws ServletException, IOException {
+        return fun_processRequest(request,response,paperid);
+    }
     
+    
+    private ModelAndView fun_filterPapers(String selectedTag, HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+    	ModelAndView m = new ModelAndView("bytags.jsp");
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+            request.setAttribute("selectedTag", selectedTag);
+            System.out.println(selectedTag);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("bytags.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return m;
+    }
     /**
      * Filters papers based on selected tags.
      * 
@@ -78,16 +95,6 @@ public class FilterController {
     @PostMapping("/bytags")
     public ModelAndView filterPapers(@RequestParam String selectedTag, HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        ModelAndView m = new ModelAndView("bytags.jsp");
-        response.setContentType("text/html;charset=UTF-8");
-        try {
-            request.setAttribute("selectedTag", selectedTag);
-            System.out.println(selectedTag);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("bytags.jsp");
-            dispatcher.forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return m;
+        return fun_filterPapers(selectedTag,request,response);
     }
 }
