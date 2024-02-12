@@ -79,3 +79,4 @@ public class PapersController {
         return new ModelAndView("rejectedpapers.jsp");
     }
 }
+
