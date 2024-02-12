@@ -51,7 +51,7 @@ public class PaperController {
         paper.setTags(tags); // Setting the tags
         paper.setLink(link); // Setting the link
         paper.setStatus(0); // Setting the status to unprocessed
-        paper.setUploadedDate(LocalDate.now()); // Setting the upload date to the current date
+        paper.setUploadeddate(LocalDate.now()); // Setting the upload date to the current date
         PSrepo.save(paper); // Saving the paper using the PaperStorerepo repository
         ModelAndView m= new ModelAndView("success.jsp"); // Creating a new ModelAndView object for success view
         return m; // Returning the ModelAndView object
