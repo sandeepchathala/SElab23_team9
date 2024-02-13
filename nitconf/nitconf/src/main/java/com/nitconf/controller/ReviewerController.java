@@ -108,7 +108,7 @@ public class ReviewerController {
      */
     @Transactional
     @PostMapping("/assign")
-    public ModelAndView assignReviewers(HttpServletRequest request, HttpServletResponse response)
+    public Object assignReviewers(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         return fun_assignReviewers(request, response);
     }
@@ -155,7 +155,7 @@ public class ReviewerController {
 	     * @throws IOException      If an I/O error occurs.
 	     */
 	    @GetMapping("/showreview")
-	    public ModelAndView showreview(@RequestParam Long paper_id, HttpServletRequest request, HttpServletResponse response)
+	    public Object showreview(@RequestParam Long paper_id, HttpServletRequest request, HttpServletResponse response)
 	            throws ServletException, IOException {
 	        return fun_showreview(paper_id, request, response);
 	    }
