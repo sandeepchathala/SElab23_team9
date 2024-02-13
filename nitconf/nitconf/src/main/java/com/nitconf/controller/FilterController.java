@@ -62,7 +62,7 @@ public class FilterController {
      * @throws IOException if an I/O error occurs
      */
     @GetMapping("/reviewertags")
-    public ModelAndView processRequest(HttpServletRequest request, HttpServletResponse response,
+    public Object processRequest(HttpServletRequest request, HttpServletResponse response,
             @RequestParam long paperid) throws ServletException, IOException {
         return fun_processRequest(request,response,paperid);
     }
@@ -93,7 +93,7 @@ public class FilterController {
      * @throws IOException if an I/O error occurs
      */
     @PostMapping("/bytags")
-    public ModelAndView filterPapers(@RequestParam String selectedTag, HttpServletRequest request,
+    public Object filterPapers(@RequestParam String selectedTag, HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         return fun_filterPapers(selectedTag,request,response);
     }
