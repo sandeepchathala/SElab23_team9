@@ -36,7 +36,7 @@ public class HomeController {
      * @return ModelAndView object for the landing page.
      */
     @GetMapping(value="/")
-    public ModelAndView getLandingPage() {
+    public Object getLandingPage() {
         ModelAndView mav = new ModelAndView("landing.jsp");
         return mav;
     }
