@@ -23,7 +23,7 @@ public class PapersController {
      * @return ModelAndView object for the assigned papers page.
      */
     @GetMapping("/assignedpapers")
-    public ModelAndView getassignedpapers(Model model) {
+    public Object getassignedpapers(Model model) {
         return new ModelAndView("assignedpapers.jsp");
     }
 
@@ -34,7 +34,7 @@ public class PapersController {
      * @return ModelAndView object for the reviewed papers page.
      */
     @GetMapping("/reviewedpapers")
-    public ModelAndView getreviewedpapersa(Model model) {
+    public Object getreviewedpapersa(Model model) {
         return new ModelAndView("reviewedpapers.jsp");
     }
 
@@ -45,7 +45,7 @@ public class PapersController {
      * @return ModelAndView object for the unreviewed papers page.
      */
     @GetMapping("/unreviewedpapers")
-    public ModelAndView getunreviewedpapersa(Model model) {
+    public Object getunreviewedpapersa(Model model) {
         return new ModelAndView("unreviewedpapers.jsp");
     }
 
@@ -55,7 +55,7 @@ public class PapersController {
      * @return ModelAndView object for the unassigned papers page.
      */
     @GetMapping("/unassignedpapers")
-    public ModelAndView getreviewedData() {
+    public Object getreviewedData() {
         return new ModelAndView("unassignedpapers.jsp");
     }
 
@@ -65,7 +65,7 @@ public class PapersController {
      * @return ModelAndView object for the accepted papers page.
      */
     @GetMapping("/acceptedpapers")
-    public ModelAndView getacceptedData() {
+    public Object getacceptedData() {
         return new ModelAndView("acceptedpapers.jsp");
     }
 
@@ -75,7 +75,7 @@ public class PapersController {
      * @return ModelAndView object for the rejected papers page.
      */
     @GetMapping("/rejectedpapers")
-    public ModelAndView getrejectedData() {
+    public Object getrejectedData() {
         return new ModelAndView("rejectedpapers.jsp");
     }
 }
