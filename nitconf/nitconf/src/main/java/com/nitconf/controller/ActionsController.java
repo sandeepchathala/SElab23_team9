@@ -83,7 +83,7 @@ public class ActionsController {
      */
     @Transactional
     @GetMapping("/accept")
-    public ModelAndView accept(@RequestParam Long paper_id, HttpServletRequest request,
+    public Object accept(@RequestParam Long paper_id, HttpServletRequest request,
                                HttpServletResponse response) throws ServletException, IOException {
         return fun_accept(paper_id, request, response);
     }
@@ -133,7 +133,7 @@ public class ActionsController {
      */
     @Transactional
     @GetMapping("/reject")
-    public ModelAndView reject(@RequestParam Long paper_id, HttpServletRequest request,
+    public Object reject(@RequestParam Long paper_id, HttpServletRequest request,
                                HttpServletResponse response) throws ServletException, IOException {
         return fun_reject(paper_id, request, response);
     }
