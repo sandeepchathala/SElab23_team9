@@ -35,7 +35,7 @@ public class PCMemberController {
      * @return ModelAndView object for the login page.
      */
     @GetMapping(value="/Login")
-    public ModelAndView getLogin() {
+    public Object getLogin() {
         return new ModelAndView("login.jsp");
     }
 
@@ -68,7 +68,7 @@ public class PCMemberController {
      * @return ModelAndView object for the dashboard or login error page.
      */
     @PostMapping(value="/Dashboard")
-    public ModelAndView getdashboard(@RequestParam String email, @RequestParam String password) {
+    public Object getdashboard(@RequestParam String email, @RequestParam String password) {
         return fun_dashboard(email, password);
     }
 
@@ -92,7 +92,7 @@ public class PCMemberController {
      * @return ModelAndView object for the profile page.
      */
     @GetMapping(value="/Profile")
-    public ModelAndView getprofile(Model model) {
+    public Object getprofile(Model model) {
         return fun_profile(model);
     }
 
@@ -117,7 +117,7 @@ public class PCMemberController {
      * @return ModelAndView object for the edit profile page containing all the details provided by the PC member.
      */
     @GetMapping(value="/EditProfile")
-    public ModelAndView editprofile(Model model) {
+    public Object editprofile(Model model) {
         return fun_editprofile(model);
     }
 
@@ -160,7 +160,7 @@ public class PCMemberController {
      */
     @Transactional
     @PostMapping(value="/UpdateProfile")
-    public ModelAndView updateprofile(PCMember data, @RequestParam String name, @RequestParam String email,
+    public Object updateprofile(PCMember data, @RequestParam String name, @RequestParam String email,
                                       @RequestParam String confirmpassword, @RequestParam String password) {
         return fun_updateprofile(data, name, email, confirmpassword, password);
     }
