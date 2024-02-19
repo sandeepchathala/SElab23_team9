@@ -1,0 +1,495 @@
+openapi: 3.0.3
+info:
+  title: Nitconf Website API
+  description: This is a documentation for the Nitconf website API. This website allows Authors to upload their papers, allows Reviewers to review the papers which are assigned to them and allows Program Committee Members (PC Members) to assign reviewers to the uploaded papers and decides whether to accept or reject the paper based on the review of the reviewers
+  version: 1.0.0
+
+tags:
+  - name: Home
+    description: Get the landing page of the NITCONF website
+  - name: PCMember
+    description: Everything about PC member
+  - name: Papers
+    description: Provides all the requested papers
+  - name: Filter
+    description: All filter operations
+  - name: Reviewer
+    description: Assigning reviewers and showing reviews of a paper
+  - name: Actions
+    description: All operations performed on papers
+
+paths:
+  /api/:
+    get:
+      tags:
+        - Home
+      summary: Get landing page
+      description: Fetches the landing page of the application.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example: JSP content for landing page
+
+  /api/pcmember/Login:
+    get:
+      tags:
+        - PCMember
+      summary: Get PC member login page
+      description: Fetches the login page for PC members
+      operationId: getloginpage
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example: JSP content for PC member login page
+
+  /api/pcmember/Dashboard:
+    post:
+      tags:
+        - PCMember
+      summary: Login to PC member dashboard
+      parameters:
+        - name: email
+          in: query
+          description: Program Committee member Email
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: Program Committee member Password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful login
+          content:
+            text/jsp:
+              example: JSP page containing dashboard
+        '404':
+          description: Unauthorized
+          content:
+            text/jsp:
+              example: JSP page showing message 'Invalid credentials'
+
+  /api/pcmember/Profile:
+    get:
+      tags:
+        - PCMember
+      summary: Get PC member profile page
+      description: Fetches the profile page for the currently logged-in PC member.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example: JSP page containing details of pcember like 'name','email' and 'password'
+
+  /api/pcmember/EditProfile:
+    get:
+      tags:
+        - PCMember
+      summary: Get edit PC member profile page
+      description: Fetches the page for editing the profile of the currently logged-in PC member.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example: JSP content for edit PC member profile page containing pc member details ('name','email' and 'password')
+
+  /api/pcmember/UpdateProfile:
+    post:
+      tags:
+        - PCMember
+      summary: Update PC member profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PCMember'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            text/jsp:
+              example: redirect to the profile page
+        '404':
+          description: Passwords are not matching
+          content:
+            text/jsp:
+              example: JSP page displaying message - 'passwords are not matching'
+
+  /api/papers/assignedpapers:
+    get:
+      tags:
+        - Papers
+      summary: Get assigned papers page
+      description: Fetches the page displaying assigned papers.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example: JSP content for assigned papers page
+
+  /api/papers/reviewedpapers:
+    get:
+      tags:
+        - Papers
+      summary: Get reviewed papers page
+      description: Fetches the page displaying reviewed papers.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example: JSP content for reviewed papers page
+
+  /api/papers/unreviewedpapers:
+    get:
+      tags:
+        - Papers
+      summary: Get unreviewed papers page
+      description: Fetches the page displaying unreviewed papers.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example: JSP content for unreviewed papers page
+
+  /api/papers/unassignedpapers:
+    get:
+      tags:
+        - Papers
+      summary: Get unassigned papers page
+      description: Fetches the page displaying unassigned papers.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example: JSP content for unassigned papers page
+
+  /api/papers/acceptedpapers:
+    get:
+      tags:
+        - Papers
+      summary: Get accepted papers page
+      description: Fetches the page displaying accepted papers.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example: JSP content for accepted papers page
+
+  /api/papers/rejectedpapers:
+    get:
+      tags:
+        - Papers
+      summary: Get rejected papers page
+      description: Fetches the page displaying rejected papers.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example: JSP content for rejected papers page
+
+  /api/filter/reviewertags:
+    get:
+      tags:
+        - Filter
+      summary: Displays all the reviewers having same tag as selected paper
+      description: Displays all the reviewers having same tag as selected paper
+      parameters:
+        - name: paperid
+          in: query
+          required: true
+          description: ID of the paper for which to retrieve reviewers based on selected paper tags
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example: JSP page showing all the reviewers having same tag as the selected paper
+
+  /api/filter/bytags:
+    post:
+      tags:
+        - Filter
+      summary: Filter papers by tags
+      description: Filters papers based on the selected tag.
+      parameters:
+        - name: tag
+          in: query
+          required: true
+          description: tag of the paper for which to filter the papers based on selected paper tags
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                selectedTag:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example:
+                filtered_papers:
+                  - id: 1
+                    title: Paper 1
+                    author: sandeep
+                    uploaded date: 24-02-2024
+                    view pdf: (link to pdf)
+                  - id: 2
+                    title: Paper 2
+                    author: balaji
+                    uploaded date: 25-02-2024
+                    view pdf: (link to pdf)
+
+  /api/reviewers/assign:
+    post:
+      tags:
+        - Reviewer
+      summary: Assign reviewers to a paper
+      description: Assign selected reviewers to a paper.
+      requestBody:
+        required: true
+        content:
+          text/jsp:
+            schema:
+              type: object
+              properties:
+                selectedReviewers:
+                  type: array
+                  items:
+                    type: integer
+                paper_id:
+                  type: integer
+      responses:
+        '200':
+          description: Redirect to /api/papers/unassignedpapers
+        '404':
+          description: No Reviewers selected
+          content:
+            text:
+              example: No Reviewers selected
+
+  /api/reviewers/showreview:
+    get:
+      tags:
+        - Reviewer
+      summary: Show review details for a paper
+      description: Display the review details for the selected paper.
+      parameters:
+        - name: paper_id
+          in: query
+          required: true
+          description: ID of the paper for which the review is to be displayed
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/jsp:
+              example:
+                paper title: calculus
+                reviews:
+                  - reviewer: sandeep
+                    rating: 3.5
+                    comment: Great paper
+                  - reviewer: balaji
+                    rating: 2
+                    comment: Could be improved
+
+  /api/actions/accept:
+    get:
+      tags:
+        - Actions
+      summary: Accept a paper
+      description: Accept a paper and send an email notification to the author regarding the accepting of the paper.
+      parameters:
+        - name: paper_id
+          in: query
+          required: true
+          description: ID of the paper to be accepted
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Redirect to /api/papers/assignedpapers
+        '404':
+          description: Paper not found
+          content:
+            application/json:
+              example:
+                error: Not Found
+                message: Paper not found
+        '406':
+          description: Author not found
+          content:
+            application/json:
+              example:
+                error: Not Found
+                message: Author not found
+
+  /api/actions/reject:
+    get:
+      tags:
+        - Actions
+      summary: Reject a paper
+      description: Reject a paper and send an email notification to the author regarding the rejecting of the paper.
+      parameters:
+        - name: paper_id
+          in: query
+          required: true
+          description: ID of the paper to be rejected
+          schema:
+            type: integer
+      responses:
+        '302':
+          description: Redirect to /api/papers/assignedpapers
+        '404':
+          description: Paper not found
+          content:
+            application/json:
+              example:
+                error: Not Found
+                message: Paper not found
+        '406':
+          description: Author not found
+          content:
+            application/json:
+              example:
+                error: Not Found
+                message: Author not found
+
+
+
+components:
+  schemas:
+    PCMember:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: sandeep
+        email:
+          type: string
+          example: sandeep@gmail.com
+        password:
+          type: string
+          example: sandeep123
+    
+    Papers:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 3
+        title:
+          type: string
+          example: integration
+        tags:
+          type: string
+          example: maths
+        status:
+          type: integer
+          example: 0
+        authorid:
+          type: integer
+          example: 1
+        link:
+          type: string
+          example: https://cdn.s3waas.gov.in/s36c524f9d5d7027454a783c841250ba71/uploads/2023/12/2023122919.pdf
+        uploadeddate:
+          type: string
+          format: date
+          example: 23-02-2024
+
+    PaperReviewer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 4
+        comment:
+          type: string
+          example: it is good. but need to be improved
+        rating:
+          type: number
+          format: float
+          example: 3.5
+        assigneddate:
+          type: string
+          format: date
+          example: 24/02/2024
+        paper_id:
+          type: integer
+          format: int64
+          example: 3
+        reviewer_id:
+          type: integer
+          format: int64
+          example: 5
+
+    Reviewer:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 5
+        name:
+          type: string
+          example: reviewer1
+        email:
+          type: string
+          example: reviewer1@gmail.com
+        tags:
+          type: string
+          example: maths
+
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 4
+        name:
+          type: string
+          example: author1
+        email:
+          type: string
+          example: author1@gmail.com
