@@ -1,3 +1,6 @@
+/**
+ * Controller class for handling home-related operations in the API.
+ */
 package com.nitconf.controller;
 
 import java.util.Arrays;
@@ -10,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,31 +23,33 @@ import org.springframework.web.servlet.ModelAndView;
 import com.nitconf.model.PCMember;
 import com.nitconf.model.Paper;
 
-//import ch.qos.logback.core.model.Model;
-import org.springframework.ui.Model;
-
-import org.springframework.web.bind.annotation.GetMapping;
-
-
-//@Controller
+/**
+ * RestController for handling home-related operations.
+ */
 @RestController
 @RequestMapping(value="/api")
 public class HomeController {
-	Long id;
-	@Autowired
-	PCMemberrepo repo;
-	@Autowired
-	PaperStorerepo PSrepo;
 
-//	@GetMapping("/hh")
-//	ResponseEntity<String> hello() {
-//	    return new ResponseEntity<>("Hello World!", HttpStatus.OK);
-//	}
-	
-	@GetMapping(value="/")
-	public ModelAndView getLandingPage() {
-		ModelAndView mav = new ModelAndView("landing.jsp");
-		return mav;
-	}
+    /**
+     * Endpoint for accessing the landing page.
+     *
+     * @return ModelAndView object for the landing page.
+     */
+    @GetMapping(value="/")
+    public Object getLandingPage() {
+        ModelAndView mav = new ModelAndView("landing.jsp");
+        return mav;
+    }
     
+    // The following may be later used for clarification
+//    /**
+//     * Example endpoint for testing purposes.
+//     *
+//     * @return ResponseEntity object with a "Hello World!" message and HTTP status OK.
+//     */
+//    @GetMapping("/hh")
+//    ResponseEntity<String> hello() {
+//        return new ResponseEntity<>("Hello World!", HttpStatus.OK);
+//    }
+
 }
