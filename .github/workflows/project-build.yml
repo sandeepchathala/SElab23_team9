@@ -22,5 +22,5 @@ jobs:
 
     - name: Build project with Maven
       run: |
-        cd niconf/nitconf
+        cd nitconf/nitconf
         mvn -B package --file pom.xml
