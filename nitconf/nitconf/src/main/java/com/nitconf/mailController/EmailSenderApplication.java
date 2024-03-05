@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nitconf.services.EmailSenderService;
 
 @Controller
-@SpringBootApplication
+//@SpringBootApplication
 public class EmailSenderApplication {
 
     @Autowired
