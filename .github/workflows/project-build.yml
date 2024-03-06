@@ -27,3 +27,8 @@ jobs:
       run: |
         cd nitconf/nitconf
         mvn -B package --file pom.xml
+    - name: Run Tests
+      run: |
+        cd nitconf/nitconf
+        mvc test
+
