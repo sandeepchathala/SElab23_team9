@@ -1,9 +1,9 @@
 name: Java Maven CI/CD
 
 on:
- push:
+  push:
     branches: [ main ]
- pull_request:
+  pull_request:
     branches: [ main ]
 
 jobs:
@@ -31,4 +31,3 @@ jobs:
       run: |
         cd nitconf/nitconf
         mvn test
-
