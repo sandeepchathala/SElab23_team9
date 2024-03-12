@@ -43,4 +43,18 @@ class PapersControllerTest {
                .andExpect(MockMvcResultMatchers.status().isOk())
                .andExpect(MockMvcResultMatchers.view().name("unassignedpapers.jsp"));
     }
+
+    @Test
+    void testGetAcceptedPapers() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/papers/acceptedpapers"))
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.view().name("acceptedpapers.jsp"));
+    }
+
+    @Test
+    void testGetRejectedPapers() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/papers/rejectedpapers"))
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.view().name("rejectedpapers.jsp"));
+    }
 }
