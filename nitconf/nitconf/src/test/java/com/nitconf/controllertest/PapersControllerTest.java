@@ -1,4 +1,4 @@
-package com.nitconf.controller;
+package com.nitconf.controllertest;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
