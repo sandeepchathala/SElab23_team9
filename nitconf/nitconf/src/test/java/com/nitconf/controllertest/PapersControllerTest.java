@@ -1,66 +1,66 @@
 package com.nitconf.controllertest;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.nitconf.controller.PapersController;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.*;
+
 class PapersControllerTest {
+
+    @InjectMocks
+    private PapersController papersController;
+
+    @Mock
+    private MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(papersController).build();
+    }
 
     @Test
     void testGetAssignedPapers() throws Exception {
-        PapersController papersController = new PapersController();
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(papersController).build();
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/papers/assignedpapers"))
-               .andExpect(MockMvcResultMatchers.view().name("assignedpapers.jsp"));
+        mockMvc.perform(get("/api/papers/assignedpapers"))
+               .andExpect(view().name("assignedpapers.jsp"));
     }
 
     @Test
     void testGetReviewedPapers() throws Exception {
-        PapersController papersController = new PapersController();
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(papersController).build();
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/papers/reviewedpapers"))
-               .andExpect(MockMvcResultMatchers.view().name("reviewedpapers.jsp"));
+        mockMvc.perform(get("/api/papers/reviewedpapers"))
+               .andExpect(view().name("reviewedpapers.jsp"));
     }
 
     @Test
     void testGetUnreviewedPapers() throws Exception {
-        PapersController papersController = new PapersController();
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(papersController).build();
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/papers/unreviewedpapers"))
-               .andExpect(MockMvcResultMatchers.view().name("unreviewedpapers.jsp"));
+        mockMvc.perform(get("/api/papers/unreviewedpapers"))
+               .andExpect(view().name("unreviewedpapers.jsp"));
     }
 
     @Test
     void testGetUnassignedPapers() throws Exception {
-        PapersController papersController = new PapersController();
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(papersController).build();
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/papers/unassignedpapers"))
-               .andExpect(MockMvcResultMatchers.view().name("unassignedpapers.jsp"));
+        mockMvc.perform(get("/api/papers/unassignedpapers"))
+               .andExpect(view().name("unassignedpapers.jsp"));
     }
 
     @Test
     void testGetAcceptedPapers() throws Exception {
-        PapersController papersController = new PapersController();
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(papersController).build();
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/papers/acceptedpapers"))
-               .andExpect(MockMvcResultMatchers.view().name("acceptedpapers.jsp"));
+        mockMvc.perform(get("/api/papers/acceptedpapers"))
+               .andExpect(view().name("acceptedpapers.jsp"));
     }
 
     @Test
     void testGetRejectedPapers() throws Exception {
-        PapersController papersController = new PapersController();
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(papersController).build();
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/papers/rejectedpapers"))
-               .andExpect(MockMvcResultMatchers.view().name("rejectedpapers.jsp"));
+        mockMvc.perform(get("/api/papers/rejectedpapers"))
+               .andExpect(view().name("rejectedpapers.jsp"));
     }
 }
