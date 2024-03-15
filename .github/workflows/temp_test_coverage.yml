@@ -29,7 +29,3 @@ jobs:
       run: |
         cd nitconf/nitconf
         mvn -B package --file pom.xml
-    - name: Run Tests with JaCoCo
-      run: |
-        cd nitconf/nitconf
-        mvn test jacoco:report
