@@ -50,8 +50,8 @@ public class PCMemberController {
      * @param model The Model object.
      * @return ModelAndView object for the dashboard page.
      */
-    
-    private ModelAndView fun_getdashboard(String email,String password,Model model) {
+    @PostMapping("/Dashboard")
+    public ModelAndView getdashboard(@RequestParam String email,@RequestParam String password,Model model) {
         if (PCrepo.existsByEmailAndPassword(email,password)) {
             currentpc=PCrepo.findByEmail(email);
             model.addAttribute("name",currentpc.getName());
@@ -62,10 +62,6 @@ public class PCMemberController {
             ModelAndView mav = new ModelAndView("loginerror.jsp");
             return mav;
         }
-    }
-    @PostMapping("/Dashboard")
-    public ModelAndView getdashboard(@RequestParam String email,@RequestParam String password,Model model) {
-        return fun_getdashboard(email,password,model);
     }
 
     /**
@@ -81,9 +77,9 @@ public class PCMemberController {
      * @param model The Model object.
      * @return ModelAndView object for the profile page.
      */
-    
-    private ModelAndView fun_getprofile(Model model) {
-        if (currentpc != null) {
+    @GetMapping("/Profile")
+    public ModelAndView getprofile(Model model) {
+       if (currentpc != null) {
             model.addAttribute("name", currentpc.getName());
             model.addAttribute("email", currentpc.getEmail());
             model.addAttribute("password", currentpc.getPassword());
@@ -91,18 +87,14 @@ public class PCMemberController {
         ModelAndView mav = new ModelAndView("profile.jsp");
         return mav;
     }
-    @GetMapping("/Profile")
-    public ModelAndView getprofile(Model model) {
-        return fun_getprofile(model);
-    }
 
     /**
      * Handles GET request for edit profile page.
      * @param model The Model object.
      * @return ModelAndView object for the edit profile page.
      */
-    
-    private ModelAndView fun_editprofile(Model model) {
+    @GetMapping("/EditProfile")
+    public ModelAndView editprofile(Model model) {
         if(currentpc != null) {
             model.addAttribute("name",currentpc.getName());
             model.addAttribute("email",currentpc.getEmail());
@@ -110,10 +102,6 @@ public class PCMemberController {
         }
         ModelAndView mav = new ModelAndView("editprofile.jsp");
         return mav;
-    }
-    @GetMapping("/EditProfile")
-    public ModelAndView editprofile(Model model) {
-        return fun_editprofile(model);
     }
 
     /**
@@ -126,10 +114,10 @@ public class PCMemberController {
      * @param model The Model object.
      * @return ModelAndView object for the profile page.
      */
-    
-    private ModelAndView fun_updateprofile(PCMember data,String name,String email,String confirmpassword,String password,Model model) {
-
-        if(!password.equals(confirmpassword)) {
+    @Transactional
+    @PostMapping("/UpdateProfile")
+    public ModelAndView updateprofile(@RequestParam String name,@RequestParam String email,@RequestParam String confirmpassword,@RequestParam String password,Model model) {
+                 if(!password.equals(confirmpassword)) {
             ModelAndView mav = new ModelAndView("confirmpassworderror.jsp");
             return mav;
         }
@@ -143,11 +131,6 @@ public class PCMemberController {
             ModelAndView mav = new ModelAndView("redirect:/api/pcmember/Profile");
             return mav;
         }
-    }
-    @Transactional
-    @PostMapping("/UpdateProfile")
-    public ModelAndView updateprofile(PCMember data,@RequestParam String name,@RequestParam String email,@RequestParam String confirmpassword,@RequestParam String password,Model model) {
-         return fun_updateprofile(data,name,email,confirmpassword,password,model);
     }
 
     /**
