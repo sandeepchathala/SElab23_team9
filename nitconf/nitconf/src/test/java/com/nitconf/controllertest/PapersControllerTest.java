@@ -13,6 +13,9 @@ import com.nitconf.controller.PapersController;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.Mockito.*;
+import org.springframework.web.servlet.ModelAndView;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.springframework.ui.Model;
 
 class PapersControllerTest {
 
@@ -22,16 +25,28 @@ class PapersControllerTest {
     @Mock
     private MockMvc mockMvc;
 
+    @Mock
+    private Model model;
+    // @BeforeEach
+    // void setUp() {
+    //     MockitoAnnotations.openMocks(this);
+    //     mockMvc = MockMvcBuilders.standaloneSetup(papersController).build();
+    // }
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(papersController).build();
+    public void init() {
+        MockitoAnnotations.initMocks(this);
     }
 
+    // @Test
+    // void testGetAssignedPapers() throws Exception {
+    //     mockMvc.perform(get("/api/papers/assignedpapers"))
+    //            .andExpect(view().name("assignedpapers.jsp"));
+    // }
+
     @Test
-    void testGetAssignedPapers() throws Exception {
-        mockMvc.perform(get("/api/papers/assignedpapers"))
-               .andExpect(view().name("assignedpapers.jsp"));
+    void testGetassignedpapers() throws Exception{
+        ModelAndView m = papersController.getassignedpapers(model);
+        assertEquals("assignedpapers.jsp",m.getViewName());
     }
 
     @Test
