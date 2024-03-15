@@ -327,5 +327,6 @@ class PCMemberControllerTest {
         if(!password.equals(c_password));
         ModelAndView m = pcmemcontroller.updateprofile( name, email, c_password, password, model);
         assertEquals("confirmpassworderror.jsp",m.getViewName());
+    
     }
 }
