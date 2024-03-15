@@ -17,5 +17,5 @@ public interface PCMemberrepo extends JpaRepository<PCMember ,Long>{
 	
 	@Modifying
 	@Query("UPDATE PCMember SET name=:name,email=:email,password=:password WHERE id=:id")
-	void setvalues(@Param("id") long id,@Param("name") String name,@Param("email") String email,@Param("password") String password);
+	boolean setvalues(@Param("id") long id,@Param("name") String name,@Param("email") String email,@Param("password") String password);
 }
