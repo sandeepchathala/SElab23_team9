@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpSession;
 /**
  * Controller class for managing PCMember operations.
  */
-@RestController
+@Controller
 @RequestMapping("/api/pcmember")
 public class PCMemberController {
 
