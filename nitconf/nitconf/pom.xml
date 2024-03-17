@@ -17,23 +17,23 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jdbc</artifactId>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<dependency>
+		<!--<dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
-    <version>5.6.15.Final</version> <!-- Adjust version as needed -->
+    <version>5.6.15.Final</version>  Adjust version as needed 
    </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -61,12 +61,6 @@
 		    <artifactId>tomcat-jasper</artifactId>
 		    <version>10.1.18</version>
 		</dependency>
-
-
-    <dependency><groupId>net.minidev</groupId>
-  <artifactId>accessors-smart</artifactId>
-  <version>2.5.0</version></dependency>
-	   
 		 <dependency>
 	   
 			<groupId>org.springframework.boot</groupId>
@@ -100,9 +94,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-taglibs</artifactId>
 		</dependency>
 		<!-- Mockito and JUnit Dependencies -->
 		<dependency>
@@ -135,6 +128,10 @@
 			<version>1.8.2</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -142,14 +139,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<!--<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>-->
 			</plugin>
 			<!-- jacoco plugin
 			<plugin>
