@@ -95,7 +95,7 @@ class PCMemberControllerTest {
 	      dummyPCMember.setPhone(1234567890L);
 	      dummyPCMember.setPassword("1234");
           // Stubbing the behavior of PCrepo to return the dummy PCMember when findByEmail is called
-            when(PCrepo.findByUsername(dummyPCMember.setUsername())).thenReturn(currentpc);
+            when(PCrepo.findByUsername(dummyPCMember.getUsername())).thenReturn(currentpc);
             ModelAndView mav = controller.getprofile(new ExtendedModelMap()); // Use ModelMap here
 
           // Asserting the expected view name
