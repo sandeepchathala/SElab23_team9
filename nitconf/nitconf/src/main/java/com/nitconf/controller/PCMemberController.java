@@ -26,7 +26,7 @@ import com.nitconf.model.PCMember;
 @RequestMapping("/api/pcmember")
 @SessionAttributes(("user"))
 public class PCMemberController {
-    
+
     @Autowired
     private PCMemberrepo PCrepo;    
 
@@ -75,8 +75,7 @@ public class PCMemberController {
     		return new ModelAndView("redirect:/api/pcmember/EditProfile");
     	}
     	else {
-    		id=currentpc.getId();
-    		PCrepo.setvalues(id,name,email,phone,password);
+    		PCrepo.setvalues(currentpc.getId(),name,email,phone,password);
     		Optional<PCMember> pp=PCrepo.findById(id);
     		if(pp.isPresent()) {
     			currentpc=pp.get();
