@@ -1,66 +1,143 @@
-package com.nitconf.controllertest;
+package com.nitconf.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import com.nitconf.controller.PapersController;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import com.nitconf.model.Paper;
+
 class PapersControllerTest {
+
+    @Mock
+    private Model model;
+    
+    @Mock
+    private PaperStorerepo paperStorerepo;
 
     @InjectMocks
     private PapersController papersController;
 
-    @Mock
-    private MockMvc mockMvc;
-
     @BeforeEach
-    void setUp() {
+    public void setup() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(papersController).build();
     }
 
     @Test
-    void testGetAssignedPapers() throws Exception {
-        mockMvc.perform(get("/api/papers/assignedpapers"))
-               .andExpect(view().name("assignedpapers.jsp"));
+    public void testGetAssignedPapers() throws Exception {
+        // Mock data
+        List<Paper> assignedPapers = new ArrayList<>();
+        when(paperStorerepo.findByStatus(2)).thenReturn(assignedPapers);
+
+        // Mock request and response
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        // Call controller method
+        ModelAndView modelAndView = papersController.getassignedpapers(model, request, response);
+
+        // Verify behavior
+        assertEquals("assignedpapers.jsp", modelAndView.getViewName());
+        assertEquals(assignedPapers, request.getAttribute("assigned_papers"));
+        verify(paperStorerepo, times(1)).findByStatus(2);
     }
 
     @Test
     void testGetReviewedPapers() throws Exception {
-        mockMvc.perform(get("/api/papers/reviewedpapers"))
-               .andExpect(view().name("reviewedpapers.jsp"));
+        List<Paper> reviewedPapers = new ArrayList<>();
+        when(paperStorerepo.findByStatus(2)).thenReturn(reviewedPapers);
+
+        // Mock request and response
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        // Call controller method
+        ModelAndView modelAndView = papersController.getreviewedpapersa(model, request, response);
+
+        // Verify behavior
+        assertEquals("reviewedpapers.jsp", modelAndView.getViewName());
+        assertEquals(reviewedPapers, request.getAttribute("reviewed_papers"));
+        verify(paperStorerepo, times(1)).findByStatus(2);
     }
 
     @Test
     void testGetUnreviewedPapers() throws Exception {
-        mockMvc.perform(get("/api/papers/unreviewedpapers"))
-               .andExpect(view().name("unreviewedpapers.jsp"));
+        List<Paper> unreviewedPapers = new ArrayList<>();
+        when(paperStorerepo.findByStatus(1)).thenReturn(unreviewedPapers);
+
+        // Mock request and response
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        // Call controller method
+        ModelAndView modelAndView = papersController.getunreviewedpapersa(model, request, response);
+
+        // Verify behavior
+        assertEquals("unreviewedpapers.jsp", modelAndView.getViewName());
+        assertEquals(unreviewedPapers, request.getAttribute("unreviewed_papers"));
+        verify(paperStorerepo, times(1)).findByStatus(1);
     }
 
     @Test
     void testGetUnassignedPapers() throws Exception {
-        mockMvc.perform(get("/api/papers/unassignedpapers"))
-               .andExpect(view().name("unassignedpapers.jsp"));
+            List<Paper> unassignedPapers = new ArrayList<>();
+            when(paperStorerepo.findByStatus(0)).thenReturn(unassignedPapers);
+
+            // Mock request and response
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            MockHttpServletResponse response = new MockHttpServletResponse();
+
+            // Call controller method
+            ModelAndView modelAndView = papersController.getreviewedData(model, request, response);
+
+            // Verify behavior
+            assertEquals("unassignedpapers.jsp", modelAndView.getViewName());
+            assertEquals(unassignedPapers, request.getAttribute("unassigned_papers"));
+            verify(paperStorerepo, times(1)).findByStatus(0);
     }
 
     @Test
     void testGetAcceptedPapers() throws Exception {
-        mockMvc.perform(get("/api/papers/acceptedpapers"))
-               .andExpect(view().name("acceptedpapers.jsp"));
+        List<Paper> acceptedPapers = new ArrayList<>();
+        when(paperStorerepo.findByStatus(3)).thenReturn(acceptedPapers);
+
+        // Mock request and response
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        // Call controller method
+        ModelAndView modelAndView = papersController.getacceptedData(model, request, response);
+
+        // Verify behavior
+        assertEquals("acceptedpapers.jsp", modelAndView.getViewName());
+        assertEquals(acceptedPapers, request.getAttribute("accepted_papers"));
+        verify(paperStorerepo, times(1)).findByStatus(3);
     }
 
     @Test
     void testGetRejectedPapers() throws Exception {
-        mockMvc.perform(get("/api/papers/rejectedpapers"))
-               .andExpect(view().name("rejectedpapers.jsp"));
+            List<Paper> rejectedPapers = new ArrayList<>();
+            when(paperStorerepo.findByStatus(4)).thenReturn(rejectedPapers);
+
+            // Mock request and response
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            MockHttpServletResponse response = new MockHttpServletResponse();
+
+            // Call controller method
+            ModelAndView modelAndView = papersController.getrejectedData(model, request, response);
+
+            // Verify behavior
+            assertEquals("rejectedpapers.jsp", modelAndView.getViewName());
+            assertEquals(rejectedPapers, request.getAttribute("rejected_papers"));
+            verify(paperStorerepo, times(1)).findByStatus(4);
     }
 }
