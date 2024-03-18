@@ -1,6 +1,5 @@
-
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@ page import="java.util.List, com.tester.demo.model.PaperReviewer, com.tester.demo.model.Reviewer" %>
+<%@ page import="java.util.List, com.nitconf.model.PaperReviewer, com.nitconf.model.Reviewer" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -98,6 +97,7 @@
         <%Long paper_id = (Long) request.getAttribute("paper_id"); %>
         <a class="button" href="/api/actions/accept?paper_id=<%=paper_id%>">Accept</a>
         <a class="button" href="/api/actions/reject?paper_id=<%=paper_id%>">Reject</a>
+        <a class="button" href="/api/reviewers/extrareviewer?paper_id=<%=paper_id%>">Assign Reviewer</a>
     </div>
  
 </body>
