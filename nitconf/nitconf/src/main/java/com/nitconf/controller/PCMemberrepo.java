@@ -11,11 +11,12 @@ import org.springframework.data.repository.query.Param;
 import com.nitconf.model.PCMember;
 
 public interface PCMemberrepo extends JpaRepository<PCMember ,Long>{
-	boolean existsByEmailAndPassword(String email, String password);
-	PCMember findByEmail(String email);
-	boolean existsByEmail(String email);
+	boolean existsByUsernameAndPassword(String email, String password);
+	PCMember findByUsername(String email);
+	boolean existsByUsername(String username);
 	
 	@Modifying
-	@Query("UPDATE PCMember SET name=:name,email=:email,password=:password WHERE id=:id")
-	void setvalues(@Param("id") long id,@Param("name") String name,@Param("email") String email,@Param("password") String password);
+	@Query("UPDATE PCMember SET name=:name,username=:username,phone=:phone,password=:password WHERE id=:id")
+	void setvalues(@Param("id") long id,@Param("name") String name,@Param("username") String username,@Param("phone") Long phone,@Param("password") String password);
+	
 }
