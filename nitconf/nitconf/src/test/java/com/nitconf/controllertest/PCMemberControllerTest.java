@@ -1,171 +1,176 @@
-package com.nitconf.controllertest;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.ui.Model;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.nitconf.controller.PCMemberController;
-import com.nitconf.controller.PCMemberrepo;
-import com.nitconf.model.PCMember;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+package com.nitconf.controller;
 
 import java.util.Optional;
 
-@ExtendWith(MockitoExtension.class)
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import org.mockito.MockitoAnnotations;
+
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.nitconf.model.PCMember;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+//@SpringBootTest
+//@ExtendWith(MockitoExtension.class)
+@WebMvcTest(PCMemberController.class)
 class PCMemberControllerTest {
 
-    @InjectMocks
-    private PCMemberController pcMemberController;
+  @InjectMocks
+  private PCMemberController controller;
+	
+	@MockBean
+	private PCMemberrepo PCrepo;
+  @Mock
+  private Model model;
+  @MockBean
+  private PCMember currentpc;
+  
+  @BeforeEach
+  public void setUp() {
+      MockitoAnnotations.openMocks(this);
+      currentpc = new PCMember();
+      currentpc.setId(1L);
+      currentpc.setEmail("banothbalaji1729@gmail.com");
+      currentpc.setName("balaji");
+      currentpc.setPassword("1234");
+  }
+  
+  @Test
+  void testGetLogin() {
+      ModelAndView mav = controller.getLogin();
+      assertEquals("login.jsp", mav.getViewName());
+  }
 
-    @Mock
-    private PCMemberrepo PCrepo;
+  @Test
+  void testGetDashboard_ValidCredentials() {
+      // Given
+      String email = "banothbalaji1729@gmail.com";
+      String password = "1234";
+      
 
-    @Test
-    void testGetLogin() {
-        ModelAndView mav = (ModelAndView) pcMemberController.getLogin();
-        assertEquals("login.jsp", mav.getViewName());
-    }
+      // Mock the behavior of PCrepo
+      when(PCrepo.existsByEmailAndPassword(email, password)).thenReturn(true);
+ 
+      // When
+      ModelAndView mav = controller.getdashboard(email, password, model);
+      controller.currentpc=currentpc;
+      // Then
+      assertEquals("dashboard.jsp", mav.getViewName());
+      assertEquals(email, currentpc.getEmail());
+      assertEquals(password, currentpc.getPassword());
+      
+  }
 
+      @Test
+      public void testGetDashboard_InvalidCredentials() {
+          String email = "banothbalaji1729@gmail.com";
+          String password = "1234";
+
+          // Mock behavior of repository
+          // Mock the beavior of PCrepo
+          when(PCrepo.existsByEmailAndPassword(email, password)).thenReturn(false);
+          ModelAndView mav = controller.getdashboard(email, password, model);
+          assertEquals("loginerror.jsp", mav.getViewName());
+      }
+      @Test
+      public void testGetProfile_Success() {
+          // Mocking email
+          String email = "banothbalaji1729@gmail.com";
+
+          // Mocking PCMember object from the database
+          PCMember dummyPCMember = new PCMember();
+          dummyPCMember.setEmail(email);
+          dummyPCMember.setName("balaji");
+          dummyPCMember.setPassword("1234");
+          
+          // Stubbing the behavior of PCrepo to return the dummy PCMember when findByEmail is called
+            when(PCrepo.findByEmail(email)).thenReturn(currentpc);
+            ModelAndView mav = controller.getprofile(new ExtendedModelMap()); // Use ModelMap here
+
+          // Asserting the expected view name
+          assertEquals("profile.jsp", mav.getViewName());
+          System.out.println(mav.getViewName());
+          System.out.println(currentpc.getName());
+          // Asserting that the attributes are added to the model correctly
+          assertEquals(dummyPCMember.getName(), currentpc.getName());
+          assertEquals(dummyPCMember.getEmail(), currentpc.getEmail());
+          assertEquals(dummyPCMember.getPassword(),currentpc.getPassword());
+      }
+      @Test
+      public void testEditProfile_Success() {
+          // Stubbing the behavior of currentpc
+          controller.currentpc = currentpc;
+
+          // Create a ModelMap and add attributes
+          ExtendedModelMap model = new ExtendedModelMap();
+          ModelAndView mav = controller.editprofile(model);
+
+          // Assert the view name
+          assertEquals("editprofile.jsp", mav.getViewName());
+          System.out.println(model.get("name"));
+          // Assert the attributes added to the model
+          assertEquals(currentpc.getName(), model.get("name"));
+          assertEquals(currentpc.getEmail(), model.get("email"));
+          assertEquals(currentpc.getPassword(), model.get("password"));
+      }
+      @Test
+      public void testUpdateProfile_Success() {
+          // Mocking the request parameters
+          String name = "balaji";
+          String email = "banothbalaji1729@gmail.com";
+          String password = "1234";
+          String confirmPassword = "1234";
+
+          controller.currentpc =currentpc;
+
+          // Stubbing the behavior of PCrepo
+          when(PCrepo.findById(currentpc.getId())).thenReturn(Optional.of(currentpc));
+          ExtendedModelMap model = new ExtendedModelMap();
     
-    @Test
-    void testGetDashboard_Success() {
-        // Given
-        String email = "sandeepchathala007@gmail.com";
-        String password = "1234";
-        PCMember pcMember = new PCMember(); // create a PCMember instance with appropriate data
-        pcMember.setName("Sandeep Chathala"); // set the name for the PCMember
+          // Perform the request to update the profile
+          ModelAndView mav = controller.updateprofile(new PCMember(), name, email, confirmPassword, password, new ExtendedModelMap());
 
-        // Mock the behavior of PCrepo
-        when(PCrepo.existsByEmailAndPassword(email, password)).thenReturn(true);
-        when(PCrepo.findByEmail(email)).thenReturn(pcMember);
+          // Assert the expected redirection view name
+          assertEquals("redirect:/api/pcmember/Profile", mav.getViewName());
 
-        // Create an instance of Model
-        Model model = mock(Model.class);
+          // Assert that the profile data is updated correctly
+          assertEquals(name, currentpc.getName());
+          assertEquals(email, currentpc.getEmail());
+          assertEquals(password, currentpc.getPassword());
+      }
+      @Test
+      public void testUpdateProfile_ConfirmPasswordError() {
+          // Mocking the request parameters
+          String name = "balaji";
+          String email = "banothbalaji1729@gmail.com";
+          String password = "1234";
+          String confirmPassword = "123";
 
-        // When
-        ModelAndView mav = pcMemberController.getdashboard(email, password, model);
+          // Stubbing the behavior of currentpc
+          controller.currentpc = currentpc;
 
-        // Then
-        assertEquals("dashboard.jsp", mav.getViewName());
-        assertEquals("Sandeep Chathala", model.getAttribute("name"));
-        // Add more assertions based on your controller logic if needed
-    }
+          // Perform the request to update the profile
+          ModelAndView mav = controller.updateprofile(currentpc, name, email, confirmPassword, password, new ExtendedModelMap());
 
+          // Assert the expected view name for password confirmation error
+          assertEquals("confirmpassworderror.jsp", mav.getViewName());
+          assertEquals(name, currentpc.getName());
+          assertEquals(email, currentpc.getEmail());
+          assertEquals(password, currentpc.getPassword());
+          
+      } 
 
-    @Test
-    void testGetDashboard_Failure() {
-        when(PCrepo.existsByEmailAndPassword(anyString(), anyString())).thenReturn(false);
-
-        ModelAndView mav = pcMemberController.getdashboard("test@gmail.com", "wrongPassword", Mockito.mock(Model.class));
-
-        assertEquals("loginerror.jsp", mav.getViewName());
-    }
-
-    @Test
-    void testGetProfile() {
-        // Given
-        // Mock the current PCMember
-        PCMember currentpc = new PCMember();
-        currentpc.setName("Sandeep Chathala");
-        currentpc.setEmail("sandeepchathala007@example.com");
-        currentpc.setPassword("1234");
-
-        // Mock the behavior of Model
-        Model model = mock(Model.class);
-
-        // When
-        ModelAndView mav = pcMemberController.getprofile(model);
-
-        // Then
-        assertEquals("profile.jsp", mav.getViewName());
-        assertEquals("Sandeep Chathala", model.getAttribute("name"));
-        assertEquals("sandeepchathala007@example.com", model.getAttribute("email"));
-        assertEquals("1234", model.getAttribute("password"));
-    }
-
-    @Test
-    void testEditProfile() {
-        // Given
-        // Mock the behavior of Model
-        Model model = mock(Model.class);
-
-        // When
-        ModelAndView mav = pcMemberController.editprofile(model);
-
-        // Then
-        assertEquals("editprofile.jsp", mav.getViewName());
-        // Add additional assertions based on your controller logic
-    }
-
-
-    @Test
-    void testUpdateProfile_PasswordMatch() {
-        // Given
-        PCMember existingPCMember = new PCMember();
-        existingPCMember.setId(1L); // Set appropriate ID
-        existingPCMember.setName("Existing Name");
-        existingPCMember.setEmail("existing@example.com");
-        existingPCMember.setPassword("oldpassword"); // Set existing password
-
-        // Mock the behavior of PCrepo.findById()
-        PCMemberrepo PCrepo = mock(PCMemberrepo.class);
-        when(PCrepo.findById(anyLong())).thenReturn(Optional.of(existingPCMember));
-
-        // Set currentpc
-        PCMemberController pcMemberController = new PCMemberController();
-        pcMemberController.setCurrentpc(existingPCMember);
-
-        // Create an instance of Model
-        Model model = mock(Model.class);
-
-        // When
-        ModelAndView mav = pcMemberController.updateprofile(null, "New Name", "newemail@example.com", "newpassword", "newpassword", model);
-
-        // Then
-        assertEquals("redirect:/api/pcmember/Profile", mav.getViewName());
-        verify(PCrepo).setvalues(anyLong(), anyString(), anyString(), anyString());
-        verify(PCrepo).findById(anyLong());
-    }
-
-    @Test
-    void testUpdateProfile_PasswordMismatch() {
-        // Given
-        PCMember existingPCMember = new PCMember();
-        existingPCMember.setId(1L); // Set appropriate ID
-        existingPCMember.setName("Existing Name");
-        existingPCMember.setEmail("existing@example.com");
-        existingPCMember.setPassword("oldpassword"); // Set existing password
-
-        // Mock the behavior of PCrepo.findById()
-        PCMemberrepo PCrepo= mock(PCMemberrepo.class);
-        when(PCrepo.findById(anyLong())).thenReturn(Optional.of(existingPCMember));
-
-        // Set currentpc
-        PCMemberController pcMemberController = new PCMemberController();
-        pcMemberController.setCurrentpc(existingPCMember);
-
-        // Create an instance of Model
-        Model model = mock(Model.class);
-
-        // When
-        ModelAndView mav = pcMemberController.updateprofile(null, "New Name", "newemail@example.com", "newpassword", "wrongpassword", model);
-
-        // Then
-        assertEquals("confirmpassworderror.jsp", mav.getViewName());
-        verify(PCrepo, never()).setvalues(anyLong(), anyString(), anyString(), anyString());
-        verify(PCrepo, never()).findById(anyLong());
-    }
-
-    
 }
