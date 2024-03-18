@@ -76,7 +76,7 @@ public class PCMemberController {
     	}
     	else {
     		PCrepo.setvalues(currentpc.getId(),name,email,phone,password);
-    		Optional<PCMember> pp=PCrepo.findById(id);
+    		Optional<PCMember> pp=PCrepo.findById(currentpc.getId());
     		if(pp.isPresent()) {
     			currentpc=pp.get();
     		}
