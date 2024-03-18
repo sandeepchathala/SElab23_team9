@@ -1,7 +1,7 @@
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" 
     pageEncoding="ISO-8859-1"%>
-<%@ page import="java.util.List, com.tester.demo.model.Paper" %>
+<%@ page import="java.util.List, com.nitconf.model.Paper" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
