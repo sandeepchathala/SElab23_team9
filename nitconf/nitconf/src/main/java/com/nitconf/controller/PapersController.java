@@ -27,6 +27,8 @@ import com.nitconf.model.Paper;
 @RequestMapping("/api/papers")
 public class PapersController {
 
+    @Autowired
+    private PaperStorerepo PSrepo;
     /**
      * Endpoint for accessing the assigned papers page.
      *
