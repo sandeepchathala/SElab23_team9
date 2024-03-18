@@ -95,7 +95,7 @@ class PCMemberControllerTest {
 	      dummyPCMember.setPhone(1234567890L);
 	      dummyPCMember.setPassword("1234");
           // Stubbing the behavior of PCrepo to return the dummy PCMember when findByEmail is called
-            when(PCrepo.findByUsername(email)).thenReturn(currentpc);
+            when(PCrepo.findByUsername(dummyPCMember.setUsername())).thenReturn(currentpc);
             ModelAndView mav = controller.getprofile(new ExtendedModelMap()); // Use ModelMap here
 
           // Asserting the expected view name
@@ -159,10 +159,10 @@ class PCMemberControllerTest {
           String confirmPassword = "123";
 
           // Stubbing the behavior of currentpc
-          controller.currentpc = currentpc;
+          //controller.currentpc = currentpc;
           HttpSession session;
           // Perform the request to update the profile
-          ModelAndView mav = controller.updateprofile(session,currentpc, name, email, confirmPassword, password, new ExtendedModelMap());
+          ModelAndView mav = controller.updateprofile(session,currentpc, name, email,phone, confirmPassword, password, new ExtendedModelMap());
 
           // Assert the expected view name for password confirmation error
           assertEquals("confirmpassworderror.jsp", mav.getViewName());
