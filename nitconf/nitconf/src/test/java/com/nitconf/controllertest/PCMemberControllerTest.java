@@ -22,7 +22,7 @@ import com.nitconf.model.PCMember;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-
+import jakarta.servlet.http.HttpSession;
 //@SpringBootTest
 //@ExtendWith(MockitoExtension.class)
 @WebMvcTest(PCMemberController.class)
@@ -46,7 +46,7 @@ class PCMemberControllerTest {
       currentpc.setUsername("banothbalaji1729@gmail.com");
       currentpc.setName("balaji");
       currentpc.setPassword("1234");
-      currentpc.setPhone(1234567890);
+      currentpc.setPhone(1234567890L);
   }
   
 
@@ -79,7 +79,7 @@ class PCMemberControllerTest {
 
           // Mock behavior of repository
           // Mock the beavior of PCrepo
-          when(PCrepo.existsByUSernameAndPassword(email, password)).thenReturn(false);
+          when(PCrepo.existsByUsernameAndPassword(email, password)).thenReturn(false);
          Principal principal; 
          HttpSession session;
          ModelAndView mav = controller.getdashboard(principal, model, session);
@@ -95,7 +95,7 @@ class PCMemberControllerTest {
 	      dummyPCMember.setPhone(1234567890L);
 	      dummyPCMember.setPassword("1234");
           // Stubbing the behavior of PCrepo to return the dummy PCMember when findByEmail is called
-            when(PCrepo.findByEmail(email)).thenReturn(currentpc);
+            when(PCrepo.findByUsername(email)).thenReturn(currentpc);
             ModelAndView mav = controller.getprofile(new ExtendedModelMap()); // Use ModelMap here
 
           // Asserting the expected view name
@@ -119,7 +119,7 @@ class PCMemberControllerTest {
           assertEquals("editprofile.jsp", mav.getViewName());
           // Assert the attributes added to the model
           assertEquals(currentpc.getName(), model.get("name"));
-          assertEquals(currentpc.getEmail(), model.get("email"));
+          assertEquals(currentpc.getUsername(), model.get("email"));
           assertEquals(currentpc.getPhone(), model.get("phone"));
       }
       @Test
