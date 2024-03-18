@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@ page import="java.util.List, com.tester.demo.model.PaperReviewer, com.tester.demo.model.Reviewer" %>
+<%@ page import="java.util.List, com.nitconf.model.PaperReviewer, com.nitconf.model.Reviewer" %>
 
 <!DOCTYPE html>
 <html lang="en">
