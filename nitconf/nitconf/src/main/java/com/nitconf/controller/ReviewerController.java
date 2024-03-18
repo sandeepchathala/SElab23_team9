@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,14 +74,9 @@ public class ReviewerController {
                     reviewerlist.add(Long.valueOf(s));
                 Long paper_id = Long.parseLong(paper_idparam);
                 System.out.println(selectedReviewers);
-                Paper pp = new Paper();
-                Optional<Paper> p = PS_repo.findById(paper_id);
-                if (p.isPresent()) {
-                    pp = p.get();
-                    System.out.println(pp.getTitle());
-                    Long id = paper_id;
-                    PS_repo.setstatus(id, 1);
-                }
+                Paper pp = PS_repo.findById(paper_id).orElse(null);
+                if (pp!=null) {
+                    PS_repo.setstatus(paper_id, 1);
                 for (Long r_id : reviewerlist) {
                     PaperReviewer pr = new PaperReviewer();
                     pr.setPaper_id(paper_id);
@@ -97,13 +93,12 @@ public class ReviewerController {
                 }
                 ModelAndView m = new ModelAndView("redirect:/api/papers/unassignedpapers");
                 return m;
-            } else {
-                ModelAndView m = new ModelAndView("noreviewersselected.jsp");
-                return m;
+                }
             }
         } finally {
             //out.close();
         }
+        return new ModelAndView("noreviewersselected.jsp");
     }
 
     /**
@@ -158,4 +153,107 @@ public class ReviewerController {
         }
         return m;
     }
+
+/**
+ * EndPoint for showing addtional reviewers to assign
+ * 
+ * @param model    the Model object for adding attributes to be exposed to the view
+ * @param request  the HttpServletRequest object containing the HTTP request
+ * @param response the HttpServletResponse object containing the HTTP response
+ * @param paper_id the ID of the paper for which extra reviewers need to be assigned
+ * @return         a ModelAndView object representing the view to be rendered
+ * @throws ServletException if the request cannot be handled due to a servlet-related issue
+ * @throws IOException      if an I/O error occurs while processing the request
+ */
+@GetMapping("/extrareviewer")
+public ModelAndView assignextrat(Model model, HttpServletRequest request, 
+        HttpServletResponse response, @RequestParam long paper_id) 
+    throws ServletException, IOException {
+    // Set content type for the response
+    response.setContentType("text/html;charset=UTF-8");
+    
+    try {
+        // Retrieve the paper details from the repository
+        Paper p = PS_repo.findById(paper_id);
+        
+        // Set attributes in the request
+        request.setAttribute("extra_reviewers", R_repo.getextrareviewers(p.getId(), p.getTags()));
+        request.setAttribute("paper_title", p.getTitle());
+        request.setAttribute("paper_id", p.getId());
+        
+        // Forward the request to the "extrareviewers.jsp" view for rendering
+        request.getRequestDispatcher("extrareviewers.jsp").forward(request, response);
+    } catch (Exception e) {
+        // Handle exceptions if needed
+        e.printStackTrace();
+    }
+    
+    // Return a ModelAndView object representing the view to be rendered
+    return new ModelAndView("extrareviewers.jsp");
+}
+
+    
+    /**
+ * Endpoint for assigning extra reviewer for a paper.
+ * 
+ * @param request  the HttpServletRequest object containing the HTTP request
+ * @param response the HttpServletResponse object containing the HTTP response
+ * @return         a ModelAndView object representing the view to be rendered
+ * @throws ServletException if the request cannot be handled due to a servlet-related issue
+ * @throws IOException      if an I/O error occurs while processing the request
+ */
+@Transactional
+@PostMapping("/assignextrareviewers")
+public ModelAndView assignExtraReviewers(HttpServletRequest request, HttpServletResponse response) 
+        throws ServletException, IOException {
+
+    try {
+        // Retrieve parameters from the request
+        String selectedReviewersParam = request.getParameter("selectedReviewers");
+        String paper_idparam = request.getParameter("paper_id");
+        
+        // Check if selectedReviewers parameter is not empty
+        if (selectedReviewersParam != null && !selectedReviewersParam.isEmpty()) {
+            // Convert comma-separated string of reviewer IDs to a list of Long
+            List<String> selectedReviewers = Arrays.asList(selectedReviewersParam.split(","));
+            List<Long> reviewerlist = new ArrayList<>();
+            for (String s : selectedReviewers)
+                reviewerlist.add(Long.valueOf(s));
+            
+            // Parse paper_id parameter to Long
+            Long paper_id = Long.parseLong(paper_idparam);
+            System.out.println(selectedReviewers);
+            // Retrieve the paper from the repository
+            Paper pp = PS_repo.findById(paper_id).orElse(null);
+            // If paper exists
+            if (pp != null) {
+                // Iterate through the list of selected reviewers
+                for (Long r_id : reviewerlist) {
+                    PaperReviewer pr = new PaperReviewer();
+                    pr.setPaper_id(paper_id);
+                    pr.setReviewer_id(r_id);
+                    pr.setAssigneddate(LocalDate.now());
+                    // Save the assignment details to the database
+                    PRrepo.save(pr);
+                    // Retrieve the reviewer by ID
+                    Optional<Reviewer> R = RService.findbyid(r_id);
+                    if (R.isPresent()) {
+                        Reviewer rr = R.get();
+                        // Compose email body
+                        String bodyofmail = "You are assigned to a new paper to review. Paper Title = "
+                                + pp.getTitle() + ".";
+                        // Send email notification to the assigned reviewer
+                        senderservice.sendEmail(rr.getEmail(), "New Paper is ready to review", bodyofmail);
+                    }
+                }
+                // Redirect to the list of assigned papers
+                return new ModelAndView("redirect:/api/papers/assignedpapers");
+            }
+        }
+    } finally {
+        // No action required in the finally block
+    }
+    // Return ModelAndView indicating that no reviewers were selected
+    return new ModelAndView("noreviewersselected.jsp");
+}
 }
