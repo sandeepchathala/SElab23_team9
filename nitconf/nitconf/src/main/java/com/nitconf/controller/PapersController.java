@@ -5,11 +5,19 @@ package com.nitconf.controller;
 
 import java.io.IOException;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import com.nitconf.model.Paper;
 
 /**
@@ -19,6 +27,8 @@ import com.nitconf.model.Paper;
 @RequestMapping("/api/papers")
 public class PapersController {
 
+    @Autowired
+    private PaperStorerepo PSrepo;
     /**
      * Endpoint for accessing the assigned papers page.
      *
@@ -29,19 +39,19 @@ public class PapersController {
      * @throws ServletException if there is a servlet related exception.
      * @throws IOException if there is an I/O related exception.
      */
-    @GetMapping("/assignedpapers")
-    public ModelAndView getAssignedPapers(Model model, HttpServletRequest request, 
+	@GetMapping("/assignedpapers")
+    public ModelAndView getassignedpapers(Model model,HttpServletRequest request, 
             HttpServletResponse response) throws ServletException, IOException {
-        // Setting response content type
-        response.setContentType("text/html;charset=UTF-8");
-        try {
-            List<Paper> assignedPapers = PSrepo.findByStatus(2);
-            request.setAttribute("assigned_papers", assignedPapers);
-            request.getRequestDispatcher("assignedpapers.jsp").forward(request, response);
-        } catch (Exception e) {
+		response.setContentType("text/html;charset=UTF-8");
+		try{
+			List<Paper> assigned_papers=PSrepo.findByStatus(2);
+		request.setAttribute("assigned_papers",assigned_papers);
+		request.getRequestDispatcher("assignedpapers.jsp").forward(request, response);
+		}
+		catch (Exception e) {
             e.printStackTrace(); // Handle exceptions properly in your application
         }
-        return new ModelAndView("assignedpapers.jsp");
+		return new ModelAndView("assignedpapers.jsp");
     }
 
     /**
@@ -54,19 +64,19 @@ public class PapersController {
      * @throws ServletException if there is a servlet related exception.
      * @throws IOException if there is an I/O related exception.
      */
-    @GetMapping("/reviewedpapers")
-    public ModelAndView getReviewedPapers(Model model, HttpServletRequest request, 
+	@GetMapping("/reviewedpapers")
+    public ModelAndView getreviewedpapersa(Model model,HttpServletRequest request, 
             HttpServletResponse response) throws ServletException, IOException {
-        // Setting response content type
-        response.setContentType("text/html;charset=UTF-8");
-        try {
-            List<Paper> reviewedPapers = PSrepo.findByStatus(2);
-            request.setAttribute("reviewed_papers", reviewedPapers);
-            request.getRequestDispatcher("reviewedpapers.jsp").forward(request, response);
-        } catch (Exception e) {
+		response.setContentType("text/html;charset=UTF-8");
+		try{
+			List<Paper> reviewed_papers=PSrepo.findByStatus(2);
+		request.setAttribute("reviewed_papers",reviewed_papers);
+		request.getRequestDispatcher("reviewedpapers.jsp").forward(request, response);
+		}
+		catch (Exception e) {
             e.printStackTrace(); // Handle exceptions properly in your application
         }
-        return new ModelAndView("reviewedpapers.jsp");
+		return new ModelAndView("reviewedpapers.jsp");
     }
 
     /**
@@ -79,19 +89,19 @@ public class PapersController {
      * @throws ServletException if there is a servlet related exception.
      * @throws IOException if there is an I/O related exception.
      */
-    @GetMapping("/unreviewedpapers")
-    public ModelAndView getUnreviewedPapers(Model model, HttpServletRequest request, 
+	@GetMapping("/unreviewedpapers")
+    public ModelAndView getunreviewedpapersa(Model model,HttpServletRequest request, 
             HttpServletResponse response) throws ServletException, IOException {
-        // Setting response content type
-        response.setContentType("text/html;charset=UTF-8");
-        try {
-            List<Paper> unreviewedPapers = PSrepo.findByStatus(1);
-            request.setAttribute("unreviewed_papers", unreviewedPapers);
-            request.getRequestDispatcher("unreviewedpapers.jsp").forward(request, response);
-        } catch (Exception e) {
+		response.setContentType("text/html;charset=UTF-8");
+		try{
+			List<Paper> unreviewed_papers=PSrepo.findByStatus(1);
+		request.setAttribute("unreviewed_papers",unreviewed_papers);
+		request.getRequestDispatcher("unreviewedpapers.jsp").forward(request, response);
+		}
+		catch (Exception e) {
             e.printStackTrace(); // Handle exceptions properly in your application
         }
-        return new ModelAndView("unreviewedpapers.jsp");
+		return new ModelAndView("unreviewedpapers.jsp");
     }
 
     /**
