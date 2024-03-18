@@ -33,7 +33,11 @@ public class PapersController {
      * Endpoint for accessing the assigned papers page.
      *
      * @param model Model object to hold attributes for the assigned papers page.
+     * @param request HttpServletRequest object for handling HTTP request.
+     * @param response HttpServletResponse object for handling HTTP response.
      * @return ModelAndView object for the assigned papers page.
+     * @throws ServletException if there is a servlet related exception.
+     * @throws IOException if there is an I/O related exception.
      */
 	@GetMapping("/assignedpapers")
     public ModelAndView getassignedpapers(Model model,HttpServletRequest request, 
@@ -54,7 +58,11 @@ public class PapersController {
      * Endpoint for accessing the reviewed papers page.
      *
      * @param model Model object to hold attributes for the reviewed papers page.
+     * @param request HttpServletRequest object for handling HTTP request.
+     * @param response HttpServletResponse object for handling HTTP response.
      * @return ModelAndView object for the reviewed papers page.
+     * @throws ServletException if there is a servlet related exception.
+     * @throws IOException if there is an I/O related exception.
      */
 	@GetMapping("/reviewedpapers")
     public ModelAndView getreviewedpapersa(Model model,HttpServletRequest request, 
@@ -75,7 +83,11 @@ public class PapersController {
      * Endpoint for accessing the unreviewed papers page.
      *
      * @param model Model object to hold attributes for the unreviewed papers page.
+     * @param request HttpServletRequest object for handling HTTP request.
+     * @param response HttpServletResponse object for handling HTTP response.
      * @return ModelAndView object for the unreviewed papers page.
+     * @throws ServletException if there is a servlet related exception.
+     * @throws IOException if there is an I/O related exception.
      */
 	@GetMapping("/unreviewedpapers")
     public ModelAndView getunreviewedpapersa(Model model,HttpServletRequest request, 
@@ -95,30 +107,77 @@ public class PapersController {
     /**
      * Endpoint for accessing the unassigned papers page.
      *
+     * @param model Model object to hold attributes for the unassigned papers page.
+     * @param request HttpServletRequest object for handling HTTP request.
+     * @param response HttpServletResponse object for handling HTTP response.
      * @return ModelAndView object for the unassigned papers page.
+     * @throws ServletException if there is a servlet related exception.
+     * @throws IOException if there is an I/O related exception.
      */
     @GetMapping("/unassignedpapers")
-    public Object getreviewedData() {
+    public ModelAndView getUnassignedPapers(Model model, HttpServletRequest request, 
+            HttpServletResponse response) throws ServletException, IOException {
+        // Setting response content type
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+            List<Paper> unassignedPapers = PSrepo.findByStatus(0);
+            request.setAttribute("unassigned_papers", unassignedPapers);
+            request.setAttribute("alltags", PSrepo.getalltags());
+            request.getRequestDispatcher("unassignedpapers.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle exceptions properly in your application
+        }
+        System.out.println("unassigned");
         return new ModelAndView("unassignedpapers.jsp");
     }
 
     /**
      * Endpoint for accessing the accepted papers page.
      *
+     * @param model Model object to hold attributes for the accepted papers page.
+     * @param request HttpServletRequest object for handling HTTP request.
+     * @param response HttpServletResponse object for handling HTTP response.
      * @return ModelAndView object for the accepted papers page.
+     * @throws ServletException if there is a servlet related exception.
+     * @throws IOException if there is an I/O related exception.
      */
     @GetMapping("/acceptedpapers")
-    public Object getacceptedData() {
+    public ModelAndView getAcceptedPapers(Model model, HttpServletRequest request, 
+            HttpServletResponse response) throws ServletException, IOException {
+        // Setting response content type
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+            List<Paper> acceptedPapers = PSrepo.findByStatus(3);
+            request.setAttribute("accepted_papers", acceptedPapers);
+            request.getRequestDispatcher("acceptedpapers.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle exceptions properly in your application
+        }
         return new ModelAndView("acceptedpapers.jsp");
     }
 
     /**
      * Endpoint for accessing the rejected papers page.
      *
+     * @param model Model object to hold attributes for the rejected papers page.
+     * @param request HttpServletRequest object for handling HTTP request.
+     * @param response HttpServletResponse object for handling HTTP response.
      * @return ModelAndView object for the rejected papers page.
+     * @throws ServletException if there is a servlet related exception.
+     * @throws IOException if there is an I/O related exception.
      */
     @GetMapping("/rejectedpapers")
-    public Object getrejectedData() {
+    public ModelAndView getRejectedPapers(Model model, HttpServletRequest request, 
+            HttpServletResponse response) throws ServletException, IOException {
+        // Setting response content type
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+            List<Paper> rejectedPapers = PSrepo.findByStatus(4);
+            request.setAttribute("rejected_papers", rejectedPapers);
+            request.getRequestDispatcher("rejectedpapers.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle exceptions properly in your application
+        }
         return new ModelAndView("rejectedpapers.jsp");
     }
 }
