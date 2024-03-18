@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -56,6 +57,7 @@
         <li><a href="/api/papers/acceptedpapers">Accepted Papers</a></li>
         <li><a href="/api/papers/rejectedpapers">Rejected Papers</a></li>
     </ul>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 </nav>
 
 <!-- Your page content goes here -->
