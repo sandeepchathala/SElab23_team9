@@ -1,100 +1,91 @@
 /**
- * The FilterController class handles filtering operations for papers.
+ * Controller class for managing filter operations in the API.
  */
 package com.nitconf.controller;
 
-import com.nitconf.model.Paper;
-
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.nitconf.model.Paper;
+
 /**
- * RestController for filtering papers.
+ * Controller class for managing filter operations in the API.
  */
-@RestController
+@Controller
 @RequestMapping("/api/filter")
 public class FilterController {
     
-    /** The paper store repository. */
     @Autowired
-    PaperStorerepo PSrepo;
+    private PaperStorerepo PSrepo;
+    @Autowired
+    private Reviewerrepo Rrepo;
     
-    private ModelAndView fun_processRequest(HttpServletRequest request, HttpServletResponse response,
-            long paperid) throws ServletException, IOException {
-    	ModelAndView m = new ModelAndView("reviewertags.jsp");
+    /**
+     * Process request to retrieve reviewers by paper tags.
+     *
+     * @param model Model object to hold attributes.
+     * @param request HttpServletRequest object for handling HTTP request.
+     * @param response HttpServletResponse object for handling HTTP response.
+     * @param paperid ID of the paper.
+     * @return ModelAndView object for the reviewertags.jsp page.
+     * @throws ServletException if there is a servlet related exception.
+     * @throws IOException if there is an I/O related exception.
+     */
+    @GetMapping("/reviewertags")
+    public ModelAndView processRequest(Model model, HttpServletRequest request, 
+            HttpServletResponse response, @RequestParam long paperid) 
+        throws ServletException, IOException { 
+        ModelAndView m = new ModelAndView("reviewertags.jsp");
         response.setContentType("text/html;charset=UTF-8");
         try {
             Paper p = PSrepo.findById(paperid);
-            System.out.println("filterbytag " + p.getTitle());
-            request.setAttribute("paper_tag", p.getTags());
+            request.setAttribute("tag_reviewers", Rrepo.getReviewersbytag(p.getTags()));
             request.setAttribute("paper_title", p.getTitle());
             request.setAttribute("paper_id", p.getId());
-            RequestDispatcher dispatcher = request.getRequestDispatcher("reviewertags.jsp");
-            dispatcher.forward(request, response);
+            request.getRequestDispatcher("reviewertags.jsp").forward(request, response);
         } catch (Exception e) {
+            // Handle exceptions if needed
             e.printStackTrace();
         }
         return m;
     }
-    /** The tag to filter papers by. */
+    
     /**
-     * Processes the request for filtering papers by reviewer tags.
-     * 
-     * @param model the model
-     * @param request the HTTP servlet request
-     * @param response the HTTP servlet response
-     * @param paperid the ID of the paper to filter by
-     * @return the ModelAndView object
-     * @throws ServletException if a servlet error occurs
-     * @throws IOException if an I/O error occurs
+     * Filter papers by tag.
+     *
+     * @param selectedTag Selected tag to filter papers.
+     * @param request HttpServletRequest object for handling HTTP request.
+     * @param response HttpServletResponse object for handling HTTP response.
+     * @return ModelAndView object for the bytags.jsp page.
+     * @throws ServletException if there is a servlet related exception.
+     * @throws IOException if there is an I/O related exception.
      */
-    @GetMapping("/reviewertags")
-    public Object processRequest(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam long paperid) throws ServletException, IOException {
-        return fun_processRequest(request,response,paperid);
-    }
-    
-    
-    private ModelAndView fun_filterPapers(String selectedTag, HttpServletRequest request,
+    @PostMapping("/bytag")
+    public ModelAndView filterPapers(@RequestParam String selectedTag, HttpServletRequest request, 
             HttpServletResponse response) throws ServletException, IOException {
-    	ModelAndView m = new ModelAndView("bytags.jsp");
+        ModelAndView m = new ModelAndView("bytags.jsp");
         response.setContentType("text/html;charset=UTF-8");
         try {
-            request.setAttribute("selectedTag", selectedTag);
+            request.setAttribute("tag_papers", PSrepo.getpapersbytags(selectedTag));
+            request.setAttribute("alltags", PSrepo.getalltags());
             System.out.println(selectedTag);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("bytags.jsp");
-            dispatcher.forward(request, response);
+            request.getRequestDispatcher("bytags.jsp").forward(request, response);       
         } catch (Exception e) {
             e.printStackTrace();
         }
         return m;
-    }
-    /**
-     * Filters papers based on selected tags.
-     * 
-     * @param selectedTag the selected tag to filter papers by
-     * @param request the HTTP servlet request
-     * @param response the HTTP servlet response
-     * @return the ModelAndView object
-     * @throws ServletException if a servlet error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @PostMapping("/bytags")
-    public Object filterPapers(@RequestParam String selectedTag, HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-        return fun_filterPapers(selectedTag,request,response);
     }
 }
