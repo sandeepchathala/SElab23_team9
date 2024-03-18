@@ -40,7 +40,7 @@ public class PCMemberController {
         return new ModelAndView("dashboard.jsp");
     }
     
-	@GetMapping("/Profile")
+    @GetMapping("/Profile")
     public ModelAndView getprofile(Model model) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		PCMember currentpc = PCrepo.findByUsername(username);
