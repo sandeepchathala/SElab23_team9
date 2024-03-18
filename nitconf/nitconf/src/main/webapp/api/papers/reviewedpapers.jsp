@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" 
     pageEncoding="ISO-8859-1"%>
-<%@ page import="java.sql.Connection, java.sql.DriverManager, java.sql.Statement, java.sql.ResultSet" %>
+<%@ page import="java.util.List, com.nitconf.model.Paper" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +8,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reviewed Papers</title>
     <style>
+        /* Styling for the container */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 20px;
+        }
+
         /* Styling for the table */
         table {
             width: 80%; /* Adjust the width as needed */
@@ -50,58 +60,57 @@
             border-radius: 5px; /* Add rounded corners */
             border: none;
         }
+        a {
+        color: #ffffff;
+        text-decoration: none;/* Blue /* Remove underline */
+         }
     </style>
 </head>
 <body>
-    <h2>Reviewed Papers</h2>
-    <button class="notification-button"><a href="/api/papers/reviewedpapers" style="text-decoration:none;">Reviewed Papers</a></button>
-    <button class="notification-button"><a href="/api/papers/unreviewedpapers" style="text-decoration:none;">Unreviewed Papers</a></button>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Sl No</th>
-                <th>Title</th>
-                <th>Tags</th>
-                <th>View PDF</th>
-                <th>View Review</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody">
-            <!-- Table rows will be inserted here dynamically -->
-            <%
-            Connection con=null;
-            Statement st=null;
-            ResultSet data= null;
-            int si_no=1;
-            try{
-                Class.forName("com.mysql.jdbc.Driver");
-                con= DriverManager.getConnection("jdbc:mysql://localhost:3306/SE_DB","root","Balu@321");
-                st = con.createStatement();
-                String str = "select * from paper where status = 2";
-                data=st.executeQuery(str);
-                while(data.next()){
-            %>
-            <tr>
-                <td><%=si_no++%></td>
-                <td><%=data.getString("title")%></td>
-                <td><%=data.getString("tags")%></td>
-                <td><a href="<%=data.getString("link")%>" target="_blank">View PDF</a></td>
-                <td> 
-                    <button class="view-reviews-button">
-                        <a href="/api/reviewers/showreview?paper_id=<%=data.getLong("id")%>" style="text-decoration:none;">
-                            View Reviews
-                        </a>
-                    </button>
-                </td>
-            </tr>
-            <% }
-              
-            } catch(Exception e){
-            
-            }
-            %>
-        </tbody>
-    </table>
+<%@include file="/api/pcmember/dashboard.jsp"%>
+    <div class="container">
+        <h2>Reviewed Papers</h2>
+        <div class="action-buttons">
+            <button class="notification-button"><a href="/api/papers/reviewedpapers" style="text-decoration:none;">Reviewed Papers</a></button>
+            <button class="notification-button"><a href="/api/papers/unreviewedpapers" style="text-decoration:none;">Unreviewed Papers</a></button>
+        </div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Sl No</th>
+                    <th>Title</th>
+                    <th>Tags</th>
+                    <th>View PDF</th>
+                    <th>View Review</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Table rows will be inserted here dynamically -->
+                <%
+                int si_no=1;
+                List<Paper> papers = (List<Paper>) request.getAttribute("reviewed_papers");
+                if(papers != null && !papers.isEmpty()){
+                    for ( Paper data : papers){
+                %>
+                <tr>
+                    <td><%=si_no++%></td>
+                    <td><%=data.getTitle()%></td>
+                    <td><%=data.getTags()%></td>
+                    <td><a href="<%=data.getLink() %>" target="_blank" style="color: #007bff;">View PDF</a></td>
+                    <td> 
+                        <button class="view-reviews-button">
+                            <a href="/api/reviewers/showreview?paper_id=<%=data.getId() %>" style="text-decoration:none;">
+                                View Reviews
+                            </a>
+                        </button>
+                    </td>
+                </tr>
+                <% }
+                }
+                %>
+            </tbody>
+        </table>
+    </div>
 
 </body>
 </html>

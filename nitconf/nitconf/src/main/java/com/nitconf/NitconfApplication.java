@@ -10,5 +10,5 @@ public class NitconfApplication {
 		SpringApplication.run(NitconfApplication.class, args);
 		System.out.println("hii");
 	}
-
+   
 }
