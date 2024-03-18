@@ -37,7 +37,11 @@ class PCMemberControllerTest {
   private Model model;
   @MockBean
   private PCMember currentpc;
-  
+  @Mock
+  private HttpSession session;
+  @Mock
+  private Principal principal;
+	
   @BeforeEach
   public void setUp() {
       MockitoAnnotations.openMocks(this);
@@ -61,8 +65,6 @@ class PCMemberControllerTest {
       when(PCrepo.existsByUsernameAndPassword(email, password)).thenReturn(true);
  
       // When
-      Principal principal; 
-      HttpSession session;
       ModelAndView mav = controller.getdashboard(principal, model, session);
       //controller.currentpc=currentpc;
       // Then
@@ -80,8 +82,6 @@ class PCMemberControllerTest {
           // Mock behavior of repository
           // Mock the beavior of PCrepo
           when(PCrepo.existsByUsernameAndPassword(email, password)).thenReturn(false);
-         Principal principal; 
-         HttpSession session;
          ModelAndView mav = controller.getdashboard(principal, model, session);
          assertEquals("loginerror.jsp", mav.getViewName());
       }
@@ -136,7 +136,6 @@ class PCMemberControllerTest {
           // Stubbing the behavior of PCrepo
           when(PCrepo.findById(currentpc.getId())).thenReturn(Optional.of(currentpc));
           ExtendedModelMap model = new ExtendedModelMap();
-          HttpSession session;
           // Perform the request to update the profile
           ModelAndView mav = controller.updateprofile(session,new PCMember(), name, email,phone, confirmPassword, password, new ExtendedModelMap());
 
@@ -160,7 +159,6 @@ class PCMemberControllerTest {
 
           // Stubbing the behavior of currentpc
           //controller.currentpc = currentpc;
-          HttpSession session;
           // Perform the request to update the profile
           ModelAndView mav = controller.updateprofile(session,currentpc, name, email,phone, confirmPassword, password, new ExtendedModelMap());
 
