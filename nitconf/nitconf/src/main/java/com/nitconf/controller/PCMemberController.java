@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import jakarta.servlet.http.HttpSession;
+
+import com.nitconf.model.PCMember;
 /**
  * Controller class for managing PCMember operations.
  */
