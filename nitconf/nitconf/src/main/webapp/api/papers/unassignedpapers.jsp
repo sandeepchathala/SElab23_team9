@@ -1,6 +1,7 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" 
     pageEncoding="ISO-8859-1"%>
-<%@ page import="java.sql.Connection, java.sql.DriverManager, java.sql.Statement, java.sql.ResultSet" %>
+<%@ page import="java.util.List, com.tester.demo.model.Paper" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,19 +11,19 @@
     <style>
         /* Styling for the table */
         table {
-            width: 100%;
+            width: 80%;
             border-collapse: collapse;
             margin-top: 20px;
         }
 
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px; /* Adjust the padding as needed */
             text-align: left;
         }
 
         th {
-            background-color: #4CAF50;
+            background-color: #28a745; /* Green */
             color: white;
         }
 
@@ -50,37 +51,52 @@
 
         /* Styling for the filter button */
         button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 10px;
+        display: block;
+        margin: 0 auto;  /* Center-align the button */
+    }
 
-        /* Styling for the filter dropdown */
-        #tagFilter {
-            display: none;
-        }
+     /* Styling for the filter dropdown */
+    #tagFilter {
+        display: none;
+        text-align: center;  /* Center-align the dropdown */
+    }
 
-        #tagDropdown {
-            padding: 8px;
-            margin-right: 5px;
-        }
+    #tagDropdown {
+        padding: 8px;
+        margin-right: 5px;
+    }
 
-        /* Styling for the apply filter button */
-        #tagFilter button {
-            background-color: #1E88E5;
-            color: white;
-            padding: 8px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+    /* Styling for the apply filter button */
+    #tagFilter button {
+        background-color: #1E88E5;
+        color: white;
+        padding: 8px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;  /* Center-align the button */
+    }
+     .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
+<%@include file="/api/pcmember/dashboard.jsp"%>
+<div class="container">
     <h2>Unassigned Papers</h2>
 
     <button onclick="showTagFilter()">Filter by Tag</button>
@@ -88,34 +104,20 @@
         <div id="tagFilter">
             <select id="tagDropdown">
                 <!-- Populate the dropdown with all available tags from your database -->
-                <% 
-                Connection con = null;
-                Statement st = null;
-                ResultSet tags = null;
-                try {
-                    Class.forName("com.mysql.jdbc.Driver");
-                    con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SE_DB", "root", "Balu@321");
-                    st = con.createStatement();
-                    String tagQuery = "SELECT DISTINCT tags FROM paper";
-                    tags = st.executeQuery(tagQuery);
-                    while (tags.next()) {
+                <% List<String> alltags = (List<String>) request.getAttribute("alltags");
+                   if(alltags!=null && !alltags.isEmpty()){
+                    for (String tag : alltags) {
                 %>
-                    <option value="<%= tags.getString("tags") %>"><%= tags.getString("tags") %></option>
-                <% }
-                } catch (Exception e) {
-                } finally {
-                    try {
-                        if (tags != null) tags.close();
-                        if (st != null) st.close();
-                        if (con != null) con.close();
-                    } catch (Exception e) {
-                    }
+                    <option value="<%= tag %>"><%= tag %></option>
+                <%
+                }
                 }
                 %>
             </select>
             <button onclick="applyTagFilter()">Apply Filter</button>
             <input type="hidden" name="selectedTag">
         </div>
+     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
     
     <table border="1">
@@ -131,42 +133,28 @@
         </thead>
         <tbody id="tableBody">
             <% 
-            Connection con1 = null;
-            Statement st1 = null;
-            ResultSet data = null;
             int serialNumber = 1;
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/SE_DB", "root", "Balu@321");
-                st1 = con1.createStatement();
-                String str = "SELECT * FROM paper WHERE status =0";
-                data = st1.executeQuery(str);
-                while (data.next()) {
+            List<Paper> papers = (List<Paper>) request.getAttribute("unassigned_papers");
+            if(papers!=null && !papers.isEmpty()){
+                for (Paper data : papers) {
             %>
                 <tr>
                     <td><%= serialNumber++ %></td>
-                    <td><%= data.getString("title") %></td>
-                    <td><%= data.getString("tags") %></td>
-                    <td><%= data.getDate("uploadeddate") %></td>
+                    <td><%= data.getTitle() %></td>
+                    <td><%= data.getTags() %></td>
+                    <td><%= data.getUploadeddate() %></td>
                     <td>
-                        <a href="/api/filter/reviewertags?paperid=<%=data.getLong("id")%>" class="assign-reviewer-link">Assign Reviewer</a>
+                        <a href="/api/filter/reviewertags?paperid=<%=data.getId()%>" class="assign-reviewer-link">Assign Reviewer</a>
                     </td>
-                    <td><a href="<%= data.getString("link") %>" class="view-pdf-link">View PDF</a></td>
+                    <td><a href="<%= data.getLink() %>" class="view-pdf-link">View PDF</a></td>
                 </tr>
-            <% }
-            } catch (Exception e) {
-            } finally {
-                try {
-                    if (data != null) data.close();
-                    if (st1 != null) st1.close();
-                    if (con1 != null) con1.close();
-                } catch (Exception e) {
-                }
+            <%
+            }
             }
             %>
         </tbody>
     </table>
-    
+    </div>
     <script>
         // Function to show/hide the tag filter dropdown
         function showTagFilter() {
@@ -181,7 +169,7 @@
         function applyTagFilter() {
             var selectedTag = document.getElementById("tagDropdown").value;   
             var form = document.getElementById('selecttagForm');
-            form.action = "/api/filter/bytags";
+            form.action = "/api/filter/bytag";
             form.method = "post";
             form.querySelector('[name="selectedTag"]').value = selectedTag;
             

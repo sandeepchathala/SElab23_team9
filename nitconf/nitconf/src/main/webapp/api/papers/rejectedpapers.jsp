@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" 
     pageEncoding="ISO-8859-1"%>
-<%@ page import="java.sql.Connection, java.sql.DriverManager, java.sql.Statement, java.sql.ResultSet" %>
+<%@ page import="org.springframework.ui.Model, com.tester.demo.model.Paper, java.util.Collection, java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,19 +10,19 @@
     <style>
         /* Styling for the table */
         table {
-            width: 100%;
+            width: 80%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin: 20px auto;
         }
 
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px;
             text-align: left;
         }
 
         th {
-            background-color: #4CAF50;
+            background-color: #28a745;
             color: white;
         }
 
@@ -44,7 +44,7 @@
             cursor: pointer;
         }
 
-        .view-pdf-link:hover {
+        .view-pdf-link:hover ,view-review:hover{
             text-decoration: underline;
         }
 
@@ -78,10 +78,20 @@
             border-radius: 4px;
             cursor: pointer;
         }
+       .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <h2>Rejected Papers</h2>
+<%@include file="/api/pcmember/dashboard.jsp"%>
+<div class="container">
+    <h2>Rejected Papers</h2></div>
 
     <table border="1">
         <thead>
@@ -90,39 +100,29 @@
                 <th>Title</th>
                 <th>Tags</th>
                 <th>Uploaded Date</th>
+                <th>View Reviews</th>
                 <th>View PDF</th>
             </tr>
         </thead>
         <tbody id="tableBody">
-            <% 
-            Connection con1 = null;
-            Statement st1 = null;
-            ResultSet data = null;
-            int serialNumber = 1;
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/SE_DB", "root", "Balu@321");
-                st1 = con1.createStatement();
-                String str = "SELECT * FROM paper WHERE status =4";
-                data = st1.executeQuery(str);
-                while (data.next()) {
+            <% int serialNumber=1;
+            List<Paper> papers = (List<Paper>) request.getAttribute("rejected_papers");
+            if (papers != null && !papers.isEmpty()) {
+                for (Paper data: papers) {
             %>
                 <tr>
                     <td><%= serialNumber++ %></td>
-                    <td><%= data.getString("title") %></td>
-                    <td><%= data.getString("tags") %></td>
-                    <td><%= data.getDate("uploadeddate") %></td>
-                    <td><a href="<%= data.getString("link") %>" class="view-pdf-link">View PDF</a></td>
+                    <td><%= data.getTitle() %></td>
+                    <td><%= data.getTags() %></td>
+                    <td><%= data.getUploadeddate() %></td>
+                    <td>
+                    <a href="/api/reviewers/reviews?paper_id=<%=data.getId()%>" style="text-decoration: none;" class="view-review">
+                    View Reviews
+                    </a>
+                    </td>
+                    <td><a href="<%= data.getLink() %>" class="view-pdf-link">View PDF</a></td>
                 </tr>
             <% }
-            } catch (Exception e) {
-            } finally {
-                try {
-                    if (data != null) data.close();
-                    if (st1 != null) st1.close();
-                    if (con1 != null) con1.close();
-                } catch (Exception e) {
-                }
             }
             %>
         </tbody>
