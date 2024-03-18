@@ -97,7 +97,7 @@ class PapersControllerTest {
             MockHttpServletResponse response = new MockHttpServletResponse();
 
             // Call controller method
-            ModelAndView modelAndView = papersController.getreviewedData(model, request, response);
+            ModelAndView modelAndView = papersController.getUnassignedPapers(model, request, response);
 
             // Verify behavior
             assertEquals("unassignedpapers.jsp", modelAndView.getViewName());
@@ -115,7 +115,7 @@ class PapersControllerTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         // Call controller method
-        ModelAndView modelAndView = papersController.getacceptedData(model, request, response);
+        ModelAndView modelAndView = papersController.getAcceptedPapers(model, request, response);
 
         // Verify behavior
         assertEquals("acceptedpapers.jsp", modelAndView.getViewName());
@@ -133,7 +133,7 @@ class PapersControllerTest {
             MockHttpServletResponse response = new MockHttpServletResponse();
 
             // Call controller method
-            ModelAndView modelAndView = papersController.getrejectedData(model, request, response);
+            ModelAndView modelAndView = papersController.getRejectedPapers(model, request, response);
 
             // Verify behavior
             assertEquals("rejectedpapers.jsp", modelAndView.getViewName());
