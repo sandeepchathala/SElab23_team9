@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -64,6 +65,14 @@
             background-color: #ddd;
             color: black;
         }
+      /* .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 20px;
+        }*/
     </style>
 </head>
 <body >
@@ -77,11 +86,11 @@
     </ul>
 </nav>
 
-<div>
+<div class="container">
     <h2>User Profile</h2>
 <h4>Name         : ${name} </h4>
 <h4>Email        : ${email} </h4>
-<h4>Password     : ${password} </h4>
+<h4>Phone     : ${phone} </h4>
 
     <button><a href="/api/pcmember/EditProfile" style="text-decoration:none">Edit Profile</a></button>
 </div>

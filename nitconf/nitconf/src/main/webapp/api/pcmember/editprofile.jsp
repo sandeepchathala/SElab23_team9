@@ -34,6 +34,9 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        h4{
+            color: red;
+        }
         button {
             background-color: #4caf50;
             color: white;
@@ -46,23 +49,40 @@
             background-color: green;
         }
     </style>
+        <script>
+        function validatePhoneNumber() {
+            var phoneNumber = document.getElementById("phone").value;
+            if (phoneNumber.length !== 10 || isNaN(phoneNumber)) {
+                alert("Please enter a valid 10-digit phone number");
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
 
-<form action="/api/pcmember/UpdateProfile" method="POST">
+<form action="/api/pcmember/Updateprofile" method="POST" onsubmit="return validatePhoneNumber()">
     <h2>Edit Profile</h2>
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" value="${name}" required>
 
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" value="${email}" required>
-
+    
+    <label for="phone">Phone:</label>
+    <input type="text" id="phone" name="phone" value="${phone}" required>
+    
+    <% if ( session.getAttribute("confirmpassword_error_msg") !=null){%>
+    	   <h4><%=session.getAttribute("confirmpassword_error_msg")%></h4>
+    	<%}session.setAttribute("confirmpassword_error_msg",null);%>
+    	
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" value="${password}" required>
     
     <label for="confirmpassword">Confirm Password:</label>
-    <input type="confirmpassword" id="confirmpassword" name="confirmpassword" value="${password}" required>
-
+    <input type="password" id="password" name="confirmpassword" value="${password}" required>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <button type="submit">Save Changes</button>
 </form>
 
