@@ -49,8 +49,8 @@ public class ActionsController {
      * @return ModelAndView object for redirecting to the assigned papers page or displaying an error message.
      * @throws ServletException If a servlet-specific error occurs.
      * @throws IOException      If an I/O error occurs.
-     */
-    private ModelAndView fun_accept(Long paper_id, HttpServletRequest request, HttpServletResponse response)
+     */ 
+    ModelAndView fun_accept(Long paper_id, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Optional<Paper> p = PSrepo.findById(paper_id);
         if (p.isPresent()) {
@@ -81,9 +81,9 @@ public class ActionsController {
      * @throws ServletException If a servlet-specific error occurs.
      * @throws IOException      If an I/O error occurs.
      */
-    @Transactional
+   @Transactional
     @GetMapping("/accept")
-    public Object accept(@RequestParam Long paper_id, HttpServletRequest request,
+    public ModelAndView accept(@RequestParam Long paper_id, HttpServletRequest request,
                                HttpServletResponse response) throws ServletException, IOException {
         return fun_accept(paper_id, request, response);
     }
@@ -133,7 +133,7 @@ public class ActionsController {
      */
     @Transactional
     @GetMapping("/reject")
-    public Object reject(@RequestParam Long paper_id, HttpServletRequest request,
+    public ModelAndView reject(@RequestParam Long paper_id, HttpServletRequest request,
                                HttpServletResponse response) throws ServletException, IOException {
         return fun_reject(paper_id, request, response);
     }
