@@ -30,8 +30,12 @@ public class FilterController {
     
     @Autowired
     private PaperStorerepo PSrepo;
+    
     @Autowired
     private Reviewerrepo Rrepo;
+    
+    @Autowired
+    private PaperReviewerrepo PRrepo;
     
     /**
      * Process request to retrieve reviewers by paper tags.
@@ -51,13 +55,13 @@ public class FilterController {
         ModelAndView m = new ModelAndView("reviewertags.jsp");
         response.setContentType("text/html;charset=UTF-8");
         try {
-            Paper p = PSrepo.findById(paperid);
+            Paper p = PSrepo.findById(paperid).orElse(null);
             request.setAttribute("tag_reviewers", Rrepo.getReviewersbytag(p.getTags()));
             request.setAttribute("paper_title", p.getTitle());
             request.setAttribute("paper_id", p.getId());
             request.getRequestDispatcher("reviewertags.jsp").forward(request, response);
         } catch (Exception e) {
-            // Handle exceptions if needed
+            // Handle exceptions if needed 
             e.printStackTrace();
         }
         return m;
