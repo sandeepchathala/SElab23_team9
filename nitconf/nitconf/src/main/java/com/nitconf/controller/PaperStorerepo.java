@@ -5,11 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
+import java.util.Optional;
 
 import com.nitconf.model.Paper;
 
 public interface PaperStorerepo extends JpaRepository<Paper,Long>{
-     Paper findById(long id);
+     Optional<Paper> findById(long id);
      
      @Modifying
      @Query("UPDATE Paper p SET p.status =:status WHERE p.id=:id")
