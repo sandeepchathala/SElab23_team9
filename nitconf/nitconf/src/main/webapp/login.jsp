@@ -68,9 +68,14 @@
 
 <form action="/login" method="post">
     <h2>Welcome to Program Committee Login Page</h2>
-    <% if ( session.getAttribute("loginerror_msg") !=null){%>
-    	   <h4><%=session.getAttribute("loginerror_msg")%></h4>
-    	<%}session.setAttribute("loginerror_msg",null);%>
+    <%
+    // Check if the "error" parameter exists in the request URL parameters
+    String error = request.getParameter("error");
+    if (error != null && error.equals("true")) {
+        // Display an error message if the "error" parameter is present
+        out.println("<p class=\"error-message\">Invalid email or password. Please try again.</p>");
+    }
+    %>
     
     <label for="username">Email:</label>
     <input type="text" id="username" name="username" required>
