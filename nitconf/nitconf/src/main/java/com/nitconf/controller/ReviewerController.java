@@ -40,12 +40,16 @@ public class ReviewerController {
 
     @Autowired
     private ReviewerService RService;
-    @Autowired
-    private Reviewerrepo R_repo;
+    
     @Autowired
     private PaperReviewerrepo PRrepo;
+    
     @Autowired
     private PaperStorerepo PS_repo;
+    
+    @Autowired
+    private Reviewerrepo Rrepo;
+    
     @Autowired
     private EmailSenderService senderservice;
 
@@ -65,6 +69,7 @@ public class ReviewerController {
 
         try {
             String selectedReviewersParam = request.getParameter("selectedReviewers");
+            System.out.println(request.getParameter("selectedReviewers"));
             String paper_idparam = request.getParameter("paper_id");
             if (selectedReviewersParam != null && !selectedReviewersParam.isEmpty()) {
                 // Split the parameter into a list of reviewer IDs
@@ -83,9 +88,8 @@ public class ReviewerController {
                     pr.setReviewer_id(r_id);
                     pr.setAssigneddate(LocalDate.now());
                     PRrepo.save(pr);
-                    Optional<Reviewer> R = RService.findbyid(r_id);
-                    if (R.isPresent()) {
-                        Reviewer rr = R.get();
+                    Reviewer rr = Rrepo.findById(r_id).orElse(null);
+                    if (rr!=null) {
                         String bodyofmail = "You are assigned to a new paper to review. Paper Title = "
                                 + pp.getTitle() + ".";
                         senderservice.sendEmail(rr.getEmail(), "New Paper is ready to review", bodyofmail);
@@ -114,10 +118,10 @@ public class ReviewerController {
             HttpServletResponse response) {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            Optional<Paper> p = PS_repo.findById(paper_id);
-            if (p.isPresent()) {
-                request.setAttribute("paper_title", p.get().getTitle());
-                List<Object[]> list_pr = (p.get().getStatus() == 3) ? PRrepo.getreview_accept(paper_id)
+            Paper p = PS_repo.findById(paper_id).orElse(null);
+            if (p!=null) {
+                request.setAttribute("paper_title", p.getTitle());
+                List<Object[]> list_pr = (p.getStatus() == 3) ? PRrepo.getreview_accept(paper_id)
                         : PRrepo.getreview_reject(paper_id);
                 request.setAttribute("reviews", list_pr);
             }
@@ -174,10 +178,10 @@ public ModelAndView assignextrat(Model model, HttpServletRequest request,
     
     try {
         // Retrieve the paper details from the repository
-        Paper p = PS_repo.findById(paper_id);
+        Paper p = PS_repo.findById(paper_id).orElse(null);
         
         // Set attributes in the request
-        request.setAttribute("extra_reviewers", R_repo.getextrareviewers(p.getId(), p.getTags()));
+        request.setAttribute("extra_reviewers", Rrepo.getextrareviewers(p.getId(), p.getTags()));
         request.setAttribute("paper_title", p.getTitle());
         request.setAttribute("paper_id", p.getId());
         
