@@ -9,12 +9,16 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import com.nitconf.model.Paper;
+
+import jakarta.servlet.ServletException;
 
 class PapersControllerTest {
 
@@ -50,6 +54,22 @@ class PapersControllerTest {
         assertEquals(assignedPapers, request.getAttribute("assigned_papers"));
         verify(paperStorerepo, times(1)).findByStatus(2);
     }
+    
+    @Test
+    public void testGetAssignedPapers_ExceptionHandling() throws ServletException, IOException {
+        // Arrange
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        List<Paper> assignedPapers = new ArrayList<>();
+        doThrow(new RuntimeException("Test Exception")).when(paperStorerepo).findByStatus(2);
+
+        // Act
+        ModelAndView modelAndView = papersController.getassignedpapers(model, request, response);
+
+        // Assert
+        assertEquals("assignedpapers.jsp", modelAndView.getViewName());
+        // You can assert further based on the behavior you expect after catching the exception
+    }
 
     @Test
     void testGetReviewedPapers() throws Exception {
@@ -67,6 +87,22 @@ class PapersControllerTest {
         assertEquals("reviewedpapers.jsp", modelAndView.getViewName());
         assertEquals(reviewedPapers, request.getAttribute("reviewed_papers"));
         verify(paperStorerepo, times(1)).findByStatus(2);
+    }
+    
+    @Test
+    public void testGetReviewedPapers_ExceptionHandling() throws ServletException, IOException {
+        // Arrange
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        List<Paper> assignedPapers = new ArrayList<>();
+        doThrow(new RuntimeException("Test Exception")).when(paperStorerepo).findByStatus(2);
+
+        // Act
+        ModelAndView modelAndView = papersController.getreviewedpapersa(model, request, response);
+
+        // Assert
+        assertEquals("reviewedpapers.jsp", modelAndView.getViewName());
+        // You can assert further based on the behavior you expect after catching the exception
     }
 
     @Test
@@ -86,6 +122,22 @@ class PapersControllerTest {
         assertEquals(unreviewedPapers, request.getAttribute("unreviewed_papers"));
         verify(paperStorerepo, times(1)).findByStatus(1);
     }
+    
+    @Test
+    public void testGetUnreviewedPapers_ExceptionHandling() throws ServletException, IOException {
+        // Arrange
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        List<Paper> assignedPapers = new ArrayList<>();
+        doThrow(new RuntimeException("Test Exception")).when(paperStorerepo).findByStatus(1);
+
+        // Act
+        ModelAndView modelAndView = papersController.getunreviewedpapersa(model, request, response);
+
+        // Assert
+        assertEquals("unreviewedpapers.jsp", modelAndView.getViewName());
+        // You can assert further based on the behavior you expect after catching the exception
+    }
 
     @Test
     void testGetUnassignedPapers() throws Exception {
@@ -103,6 +155,22 @@ class PapersControllerTest {
             assertEquals("unassignedpapers.jsp", modelAndView.getViewName());
             assertEquals(unassignedPapers, request.getAttribute("unassigned_papers"));
             verify(paperStorerepo, times(1)).findByStatus(0);
+    }
+    
+    @Test
+    public void testGetUnassignedPapers_ExceptionHandling() throws ServletException, IOException {
+        // Arrange
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        List<Paper> assignedPapers = new ArrayList<>();
+        doThrow(new RuntimeException("Test Exception")).when(paperStorerepo).findByStatus(0);
+
+        // Act
+        ModelAndView modelAndView = papersController.getUnassignedPapers(model, request, response);
+
+        // Assert
+        assertEquals("unassignedpapers.jsp", modelAndView.getViewName());
+        // You can assert further based on the behavior you expect after catching the exception
     }
 
     @Test
@@ -122,6 +190,22 @@ class PapersControllerTest {
         assertEquals(acceptedPapers, request.getAttribute("accepted_papers"));
         verify(paperStorerepo, times(1)).findByStatus(3);
     }
+    
+    @Test
+    public void testGetAcceptededPapers_ExceptionHandling() throws ServletException, IOException {
+        // Arrange
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        List<Paper> assignedPapers = new ArrayList<>();
+        doThrow(new RuntimeException("Test Exception")).when(paperStorerepo).findByStatus(3);
+
+        // Act
+        ModelAndView modelAndView = papersController.getAcceptedPapers(model, request, response);
+
+        // Assert
+        assertEquals("acceptedpapers.jsp", modelAndView.getViewName());
+        // You can assert further based on the behavior you expect after catching the exception
+    }
 
     @Test
     void testGetRejectedPapers() throws Exception {
@@ -139,5 +223,21 @@ class PapersControllerTest {
             assertEquals("rejectedpapers.jsp", modelAndView.getViewName());
             assertEquals(rejectedPapers, request.getAttribute("rejected_papers"));
             verify(paperStorerepo, times(1)).findByStatus(4);
+    }
+    
+    @Test
+    public void testGetRejectedPapers_ExceptionHandling() throws ServletException, IOException {
+        // Arrange
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        List<Paper> assignedPapers = new ArrayList<>();
+        doThrow(new RuntimeException("Test Exception")).when(paperStorerepo).findByStatus(4);
+
+        // Act
+        ModelAndView modelAndView = papersController.getRejectedPapers(model, request, response);
+
+        // Assert
+        assertEquals("rejectedpapers.jsp", modelAndView.getViewName());
+        // You can assert further based on the behavior you expect after catching the exception
     }
 }
