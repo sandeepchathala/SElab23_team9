@@ -56,6 +56,7 @@
         <li><a href="/api/papers/unassignedpapers">Unassigned Papers</a></li>
         <li><a href="/api/papers/acceptedpapers">Accepted Papers</a></li>
         <li><a href="/api/papers/rejectedpapers">Rejected Papers</a></li>
+        <li><a href="/logout">Logout</a></li>
     </ul>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 </nav>
