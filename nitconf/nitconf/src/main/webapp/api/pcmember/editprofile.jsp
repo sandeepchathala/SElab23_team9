@@ -78,10 +78,10 @@
     	<%}session.setAttribute("confirmpassword_error_msg",null);%>
     	
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password" value="${password}" required>
+    <input type="password" id="password" name="password" required>
     
     <label for="confirmpassword">Confirm Password:</label>
-    <input type="password" id="password" name="confirmpassword" value="${password}" required>
+    <input type="password" id="password" name="confirmpassword" required>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <button type="submit">Save Changes</button>
 </form>

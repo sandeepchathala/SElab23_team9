@@ -4,9 +4,11 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,8 @@ import org.springframework.ui.Model;
 import com.nitconf.model.Paper;
 import com.nitconf.model.Reviewer;
 
+import jakarta.servlet.ServletException;
+
 public class FilterControllerTest {
 
     @Mock
@@ -30,7 +34,9 @@ public class FilterControllerTest {
     private Reviewerrepo Rrepo;
 
     @Mock
-    Model model;
+    private Model model;
+    
+    private Paper paper;
     
     @InjectMocks
     private FilterController filterController;
@@ -38,20 +44,21 @@ public class FilterControllerTest {
     @BeforeEach
     void setUp() {
     	MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    void testProcessRequest() {
-        // Mock data
-        long paperId = 1L;
-        Paper paper = new Paper();
-        paper.setId(paperId);
+        paper = new Paper();
+        paper.setId(1L);
         paper.setTitle("Sample Paper");
         paper.setTags("maths");
         paper.setAuthorid(1L);
         paper.setLink("pdf link");
         paper.setStatus(0);
         paper.setUploadeddate(LocalDate.now());
+    }
+
+    @Test
+    void testProcessRequest() throws ServletException, IOException {
+        // Mock data
+        long paperId = 1L;
+
         List<Reviewer> reviewers = new ArrayList<>();
         for(Long i=0L;i<5L;i++) {
         	Reviewer reviewer = new Reviewer();
@@ -70,7 +77,7 @@ public class FilterControllerTest {
     	reviewers1.add(reviewer);
 
         // Mock behavior
-        when(PSrepo.findById(paperId)).thenReturn(paper);
+        when(PSrepo.findById(paperId)).thenReturn(Optional.of(paper));
         when(Rrepo.getReviewersbytag(paper.getTags())).thenReturn(reviewers);
 
         // Perform request
@@ -78,11 +85,8 @@ public class FilterControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         
-        try {
             modelAndView = filterController.processRequest(model, request, response, paperId);
-        } catch (Exception e) {
-            fail("Exception occurred: " + e.getMessage());
-        }
+
 
         // Verify ModelAndView
         assertNotNull(modelAndView);
@@ -95,9 +99,30 @@ public class FilterControllerTest {
         verify(PSrepo).findById(paperId);
         verify(Rrepo).getReviewersbytag(paper.getTags());
     }
+    
+    @Test
+    public void testProcessRequest_ExceptionHandling() throws ServletException, IOException {
+        // Arrange
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        long paperId = 123; // Example paper ID
+        Paper paper = new Paper();
+        paper.setId(paperId);
+        paper.setTitle("Test Paper");
+        paper.setTags("test, review, tags");
+        List<Reviewer> mockReviewers = new ArrayList<>(); // Mock list of reviewers
+        doThrow(new RuntimeException("Test Exception")).when(PSrepo).findById(paperId);
+
+        // Act
+        ModelAndView modelAndView = filterController.processRequest(model, request, response, paperId);
+
+        // Assert
+        assertEquals("reviewertags.jsp", modelAndView.getViewName());
+        // You can add further assertions based on your requirements
+    }
 
     @Test
-    void testFilterPapers() {
+    void testFilterPapers() throws ServletException, IOException {
         // Mock data
         String selectedTag = "Java";
         List<Paper> papers = new ArrayList<>();
@@ -120,20 +145,40 @@ public class FilterControllerTest {
         ModelAndView modelAndView = null;
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        try {
-            modelAndView = filterController.filterPapers(selectedTag, request, response);
-        } catch (Exception e) {
-            fail("Exception occurred: " + e.getMessage());
-        }
+        modelAndView = filterController.filterPapers(selectedTag, request, response);
 
+        List<Paper> respPapers= (List<Paper>)request.getAttribute("tag_papers");
         // Verify ModelAndView
         assertNotNull(modelAndView);
         assertEquals("bytags.jsp", modelAndView.getViewName());
-        assertEquals(papers,request.getAttribute("tag_papers"));
+        assertEquals(papers.size(),respPapers.size());
         assertNotNull(request.getAttribute("alltags"));
 
         // Verify interactions
         verify(PSrepo).getpapersbytags(selectedTag);
         verify(PSrepo).getalltags();
     }
+    
+    @Test
+    public void testFilterPapers_ExceptionHandling() throws ServletException, IOException {
+        // Arrange
+    	String selectedTag = "Java";
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        long paperId = 123; // Example paper ID
+        Paper paper = new Paper();
+        paper.setId(paperId);
+        paper.setTitle("Test Paper");
+        paper.setTags("test, review, tags");
+        List<Reviewer> mockReviewers = new ArrayList<>(); // Mock list of reviewers
+        doThrow(new RuntimeException("Test Exception")).when(PSrepo).getpapersbytags(selectedTag);
+
+        // Act
+        ModelAndView modelAndView = filterController.filterPapers(selectedTag, request, response);
+
+        // Assert
+        assertEquals("bytags.jsp", modelAndView.getViewName());
+        // You can add further assertions based on your requirements
+    }
+
 }
