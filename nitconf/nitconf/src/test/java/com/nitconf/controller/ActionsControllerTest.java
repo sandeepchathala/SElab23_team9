@@ -17,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.servlet.ModelAndView;
+
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 import com.nitconf.model.Author;
@@ -96,5 +98,58 @@ public class ActionsControllerTest {
         verify(PSrepo).setstatus(1L, 4);
     }
 
+
+    @Test
+    public void testFun_accept_PaperNotFound() throws ServletException, IOException {
+        // Mock repository methods
+        when(PSrepo.findById(any())).thenReturn(Optional.empty()); // Mock PSrepo to return Paper not found
+
+        // Test controller method
+        ModelAndView result = controller.fun_accept(1L, request, response);
+
+        // Verify interactions
+        verify(senderservice, never()).sendEmail(anyString(), anyString(), anyString()); // Ensure no email is sent
+        verify(PSrepo, never()).setstatus(anyLong(), anyInt()); // Ensure status is not updated
+        assertEquals("Paper is not Found", result.getViewName()); // Verify the view name
+    }
+
+    @Test
+    public void testFun_accept_AuthorNotFound() throws ServletException, IOException {
+        // Mock repository methods
+        when(PSrepo.findById(any())).thenReturn(Optional.of(samplePaper)); // Stub PSrepo to return a sample paper
+        when(Arepo.findById(any())).thenReturn(Optional.empty()); // Mock Arepo to return Author not found
+
+        // Test controller method
+        ModelAndView result = controller.fun_accept(1L, request, response);
+
+        // Verify interactions
+        verify(senderservice, never()).sendEmail(anyString(), anyString(), anyString()); // Ensure no email is sent
+        verify(PSrepo, never()).setstatus(anyLong(), anyInt()); // Ensure status is not updated
+        assertEquals("Author is not Found", result.getViewName()); // Verify the view name
+    }
+    @Test
+    public void testFun_reject_AuthorNotFound() throws ServletException, IOException {
+        // Arrange
+        when(PSrepo.findById(any())).thenReturn(Optional.of(new Paper()));
+        when(Arepo.findById(any())).thenReturn(Optional.empty());
+
+        // Act
+        ModelAndView result = controller.reject(1L, request, response);
+
+        // Assert
+        assertEquals("Author is not Found", result.getViewName());
+    }
+
+    @Test
+    public void testFun_reject_PaperNotFound() throws ServletException, IOException {
+        // Arrange
+        when(PSrepo.findById(any())).thenReturn(Optional.empty());
+
+        // Act
+        ModelAndView result = controller.reject(1L, request, response);
+
+        // Assert
+        assertEquals("Paper is not Found", result.getViewName());
+    }
 
 }
