@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" 
     pageEncoding="ISO-8859-1"%>
-<%@ page import="java.sql.Connection, java.sql.DriverManager, java.sql.Statement, java.sql.ResultSet" %>
+<%@ page import="java.util.List, com.nitconf.model.Paper" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +9,14 @@
     <title>Unreviewed Papers</title>
     <style>
         /* Styling for the table */
+         .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 20px;
+        }
         table {
             width: 80%; /* Adjust the width as needed */
             border-collapse: collapse;
@@ -26,7 +34,6 @@
             color: white;
         }
 
-        /* Styling for action buttons */
         .action-buttons {
             display: flex;
             gap: 10px; /* Adjust the gap between buttons as needed */
@@ -50,13 +57,21 @@
             border-radius: 5px; /* Add rounded corners */
             border: none;
         }
+         a {
+        color: #ffffff;
+        text-decoration: none;/* Blue /* Remove underline */
+         }
     </style>
 </head>
 <body>
+<%@include file="/api/pcmember/dashboard.jsp"%>
+<div class="container">
     <h2>Unreviewed Papers</h2>
-    <button class="notification-button"><a href="/api/papers/reviewedpapers" style="text-decoration:none;">Reviewed Papers</a></button>
-    <button class="notification-button"><a href="/api/papers/unreviewedpapers" style="text-decoration:none;">Unreviewed Papers</a></button>
-    <table border="1">
+        <div class="action-buttons">
+            <button class="notification-button"><a href="/api/papers/reviewedpapers" style="text-decoration:none;">Reviewed Papers</a></button>
+            <button class="notification-button"><a href="/api/papers/unreviewedpapers" style="text-decoration:none;">Unreviewed Papers</a></button>
+        </div>
+        <table border="1">
         <thead>
             <tr>
                 <th>Sl No</th>
@@ -68,32 +83,22 @@
         <tbody id="tableBody">
             <!-- Table rows will be inserted here dynamically -->
             <%
-            Connection con=null;
-            Statement st=null;
-            ResultSet data= null;
             int si_no=1;
-            try{
-                Class.forName("com.mysql.jdbc.Driver");
-                con= DriverManager.getConnection("jdbc:mysql://localhost:3306/SE_DB","root","Balu@321");
-                st = con.createStatement();
-                String str = "select * from paper where status = 1";
-                data=st.executeQuery(str);
-                while(data.next()){
+            List<Paper> papers = (List<Paper>) request.getAttribute("unreviewed_papers");
+            if(papers != null && !papers.isEmpty()){
+                for ( Paper data : papers){
             %>
             <tr>
-                <td><%=si_no++%></td>
-                <td><%=data.getString("title")%></td>
-                <td><%=data.getString("tags")%></td>
-                <td><a href="<%=data.getString("link")%>" target="_blank">View PDF</a></td>
+                <td><%= si_no++ %></td>
+                <td><%= data.getTitle()%></td>
+                <td><%= data.getTags()%></td>
+                <td><a href="<%= data.getLink() %>" target="_blank" style="color: #007bff;">View PDF</a></td>
             </tr>
             <% }
-              
-            } catch(Exception e){
-            
             }
             %>
         </tbody>
     </table>
-
+</div>
 </body>
 </html>

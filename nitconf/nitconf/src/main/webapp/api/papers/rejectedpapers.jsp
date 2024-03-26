@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" 
     pageEncoding="ISO-8859-1"%>
-<%@ page import="org.springframework.ui.Model, com.tester.demo.model.Paper, java.util.Collection, java.util.List" %>
+<%@ page import="org.springframework.ui.Model, com.nitconf.model.Paper, java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
