@@ -56,7 +56,7 @@ public class SecurityConfig{
 				.loginPage("/login")
 				.permitAll()
 				.defaultSuccessUrl("/api/pcmember/Dashboard",false)
-				.failureUrl("/login")
+				.failureUrl("/login?error=true")
 				
 			)
       /* following later may be used */
