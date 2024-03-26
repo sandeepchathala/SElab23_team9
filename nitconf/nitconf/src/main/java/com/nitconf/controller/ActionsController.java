@@ -137,5 +137,4 @@ public class ActionsController {
                                HttpServletResponse response) throws ServletException, IOException {
         return fun_reject(paper_id, request, response);
     }
-
 }
