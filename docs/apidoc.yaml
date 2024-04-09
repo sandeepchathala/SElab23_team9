@@ -5,8 +5,8 @@ info:
   version: 1.0.0
 
 tags:
-  - name: Home
-    description: Get the landing page of the NITCONF website
+  - name: Login
+    description: Get the login page of the NITCONF website for the Program Committee Member
   - name: PCMember
     description: Everything about PC member
   - name: Papers
@@ -19,32 +19,33 @@ tags:
     description: All operations performed on papers
 
 paths:
-  /api/:
-    get:
-      tags:
-        - Home
-      summary: Get landing page
-      description: Fetches the landing page of the application.
-      responses:
-        '200':
-          description: Successful response
-          content:
-            text/jsp:
-              example: JSP content for landing page
 
-  /api/pcmember/Login:
+  /login:
     get:
       tags:
-        - PCMember
-      summary: Get PC member login page
+        - Login
+      summary: Handles the GET request for login
       description: Fetches the login page for PC members
-      operationId: getloginpage
       responses:
         '200':
-          description: Successful response
+          description: Successful operation
           content:
             text/jsp:
-              example: JSP content for PC member login page
+              example: Redirect to Login page
+        
+  /logout:
+    get:
+      tags:
+        - Login
+      summary: Handles the GET request for logout
+      description: Logout the currently Login User and redirect to the login page
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            text/jsp:
+              example: Redirect to Login page
+
 
   /api/pcmember/Dashboard:
     post:
@@ -85,7 +86,7 @@ paths:
           description: Unauthorized
           content:
             text/jsp:
-              example: JSP page showing message 'Invalid credentials'
+              example: redirect to the login page and shows message 'Invalid credentials'
 
   /api/pcmember/Profile:
     get:
@@ -98,7 +99,7 @@ paths:
           description: Successful response
           content:
             text/jsp:
-              example: JSP page containing details of pcember like 'name','email' and 'password'
+              example: JSP page containing details of pcember like 'name','username' and 'phone'
 
   /api/pcmember/EditProfile:
     get:
@@ -111,7 +112,7 @@ paths:
           description: Successful response
           content:
             text/jsp:
-              example: JSP content for edit PC member profile page containing pc member details ('name','email' and 'password')
+              example: JSP content for edit PC member profile page containing pc member details ('name','username','phone' and 'password')
 
   /api/pcmember/UpdateProfile:
     post:
@@ -134,7 +135,7 @@ paths:
           description: Passwords are not matching
           content:
             text/jsp:
-              example: JSP page displaying message - 'passwords are not matching'
+              example: Redirect to Edit Profile page and display message - 'passwords are not matching'
 
   /api/papers/assignedpapers:
     get:
@@ -295,13 +296,40 @@ paths:
                   type: integer
       responses:
         '200':
-          description: Redirect to /api/papers/unassignedpapers
+          description: Successful Response Redirect to /api/papers/unassignedpapers
         '404':
           description: No Reviewers selected
           content:
             text:
               example: No Reviewers selected
 
+  /api/reviewers/reviews:
+    get:
+      tags:
+          - Reviewer
+      summary: Get reviews of accepted and rejected papers
+      parameters:
+        - name: paper_id
+          in: query
+          description: ID of the accepted paper or rejected paper for which the review is to be displayed
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            text/jsp:
+              example:
+                paper title: calculus
+                reviews:
+                  - reviewer: sandeep
+                    rating: 3.5
+                    comment: Great paper
+                  - reviewer: balaji
+                    rating: 2
+                    comment: Could be improved
+          
   /api/reviewers/showreview:
     get:
       tags:
@@ -329,6 +357,50 @@ paths:
                   - reviewer: balaji
                     rating: 2
                     comment: Could be improved
+                    
+  /api/reviewers/extrareviewer:
+    get:
+      tags:
+        - Reviewer
+      summary: Get additional reviewers to assign
+      description: Displays all the reviewers who are not reviewed the selected paper and having the seme tag as the selected paper.
+      parameters:
+        - name: paper_id
+          in: query
+          description: ID of the paper
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            text/jsp:
+              example:
+                JSP page showing all the reviewers having same tag as the selected paper and who are not yet reviewed the selected paper
+
+  /api/reviewers/assignextrareviewers:
+    post:
+      tags:
+        - Reviewer
+      summary: Assign extra reviewers to a paper
+      parameters:
+        - name: selectedReviewers
+          in: query
+          description: Comma-separated list of reviewer IDs
+          required: true
+          schema:
+            type: integer
+        - name: paper_id
+          in: query
+          description: ID of the paper
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful Response Redirect to /api/papers/assignedpapers
+
 
   /api/actions/accept:
     get:
@@ -375,7 +447,7 @@ paths:
           schema:
             type: integer
       responses:
-        '302':
+        '200':
           description: Redirect to /api/papers/assignedpapers
         '404':
           description: Paper not found
@@ -405,9 +477,12 @@ components:
         name:
           type: string
           example: sandeep
-        email:
+        username:
           type: string
           example: sandeep@gmail.com
+        phone:
+          type: integer
+          example: 7890654523
         password:
           type: string
           example: sandeep123
